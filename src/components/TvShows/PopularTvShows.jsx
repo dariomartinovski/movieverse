@@ -8,12 +8,12 @@ function PopularTvShows({sectionName}) {
   
     const getTvShowDetails = async (showId) => {
     //   const detailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
-        const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}/season/${1}/episode/${1}?api_key=${apiKey}`;
+        const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
     
         return fetch(episodeDetailsUrl)
         .then(response => response.json())
-        .then(movieDetails => {
-            return movieDetails.id;
+        .then(showDetails => {
+            return showDetails;
         })
         .catch(() => {
             console.error(`Error fetching TV show details for tv show with id: ${showId}`);
@@ -31,15 +31,18 @@ function PopularTvShows({sectionName}) {
       const formattedCurrentDate = currentDate.toISOString().split('T')[0];
       const formattedOneWeekAgo = oneWeekAgo.toISOString().split('T')[0];
   
-      const url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&sort_by=popularity.desc&primary_release_date.gte=${formattedOneWeekAgo}&primary_release_date.lte=${formattedCurrentDate}`;
-  
+      // const url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&sort_by=popularity.desc&primary_release_date.gte=${formattedOneWeekAgo}&primary_release_date.lte=${formattedCurrentDate}`;
+      const url = `https://api.themoviedb.org/3/trending/tv/week?language=en-US&api_key=${apiKey}`;
+      
       fetch(url)
       .then(response => response.json())
       .then(data => {
-        const promises = data.results.map(async (show) => {
-            const episodeId = await getTvShowDetails(show.id);
-            return { ...show, episode_id: episodeId, episode_number: 1, season_number: 1 };
-          }); 
+        const promises = data.results.map(show => getTvShowDetails(show.id));
+
+        // const promises = data.results.map(async (show) => {
+        //     const episodeId = await getTvShowDetails(show.id);
+        //     return { ...show, episode_number: 1, season_number: 1 };
+        //   }); 
           Promise.all(promises)
           .then(movieDetails => {
               const validDetails = movieDetails.filter(detail => detail !== null && detail.poster_path != null);

@@ -3,77 +3,78 @@ import { MdOutlineStar, MdOutlineStarBorder, MdOutlineStarHalf } from "react-ico
 import { IoIosAddCircleOutline } from "react-icons/io";
 import styled from 'styled-components';
 
-function MovieDetails({movie}) {
+function renderStars(rating){
+    rating = rating / 2;
+    const maxStars = 5;
+    const fullStars = Math.floor(rating);
+    const halfStars = rating % 1 >= 0.5 ? 1 : 0;
+    const emptyStars = maxStars - fullStars - halfStars;
+
+    let stars = [];
+    for (let i = 0; i < fullStars; i++) {
+        stars.push(<MdOutlineStar key={i} />);
+    }
+    if (halfStars == 1) {
+        stars.push(<MdOutlineStarHalf key={fullStars} />);
+    }
+    for (let i = 0; i < emptyStars; i++) {
+        stars.push(<MdOutlineStarBorder key={fullStars + 1 + i} />);
+    }
+    return stars;
+}
+
+function TvShowDetailsHome({show}) {
     const [watchlist, setWatchlist] = useState([]);
     const [isInWatchlist, setIsInWatchlist] = useState(false);
 
     useEffect(() => {
-      const storedWatchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-      setWatchlist(storedWatchlist);
+        const storedWatchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+        setWatchlist(storedWatchlist);
 
-      setIsInWatchlist(storedWatchlist.includes(`movie_${movie.id}`));
+        setIsInWatchlist(storedWatchlist.includes(`tv_${show.id}`));
     }, []);
 
     const addToWatchlist = () => {
         if (isInWatchlist) {
-          const shouldRemove = window.confirm('Are you sure you want to remove this movie from your watchlist?');
-          if (shouldRemove) {
-            const updatedWatchlist = watchlist.filter((id) => id !== `movie_${movie.id}`);
+            const shouldRemove = window.confirm('Are you sure you want to remove this show from your watchlist?');
+            if (shouldRemove) {
+            const updatedWatchlist = watchlist.filter((id) => id !== `tv_${show.id}`);
             setWatchlist(updatedWatchlist);
             localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
-            alert('Successfully removed movie from watchlist');
+            alert('Successfully removed show from watchlist');
             setIsInWatchlist(false);
-          }
+            }
         } else {
-        const updatedWatchlist = [...watchlist, `movie_${movie.id}`];
+        const updatedWatchlist = [...watchlist, `tv_${show.id}`];
         setWatchlist(updatedWatchlist);
-          localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
-          alert('Successfully added movie to watchlist');
-          setIsInWatchlist(true);
+            localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
+            alert('Successfully added show to watchlist');
+            setIsInWatchlist(true);
         }
-      };
+    };
 
-    const renderStars = (rating) => {
-        rating = rating / 2;
-        const maxStars = 5;
-        const fullStars = Math.floor(rating);
-        const halfStars = rating % 1 >= 0.5 ? 1 : 0;
-        const emptyStars = maxStars - fullStars - halfStars;
-    
-        let stars = [];
-        for (let i = 0; i < fullStars; i++) {
-            stars.push(<MdOutlineStar key={i} />);
-        }
-        if (halfStars == 1) {
-            stars.push(<MdOutlineStarHalf key={fullStars} />);
-        }
-        for (let i = 0; i < emptyStars; i++) {
-            stars.push(<MdOutlineStarBorder key={fullStars + 1 + i} />);
-        }
-        return stars;
-    }
-
-    return (
-    <MovieDetailsContainer className='container' style={{
-        backgroundImage: movie?.backdrop_path?
-        `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
+  return (
+    <TvShowDetailsHomeContainer style={{
+        backgroundImage: show?.backdrop_path?
+        `url(https://image.tmdb.org/t/p/original${show.backdrop_path})`
         : 'none',
-      }}>
-        <div className='movie_container'>
-            <img className='poster' src={`https://image.tmdb.org/t/p/w500${movie?.poster_path}`} alt={movie?.title} />
+      }}
+      >
+        <div className='show_container'>
+            <img className='poster' src={`https://image.tmdb.org/t/p/w500${show?.poster_path}`} alt={show?.name} />
             <div className="right_part">
-                <h1 className="title">{movie?.title}</h1>
-                <h3 className='tagline'>{movie?.tagline}</h3>
+                <h1 className="title">{show?.name}</h1>
+                <h3 className='tagline'>{show?.tagline}</h3>
                 <div className="genres">
-                    {movie?.genres?.map((genre) => {
+                    {show?.genres?.map((genre) => {
                         return <p className='genre' key={genre.id}>{genre.name}</p> 
                     })}
                 </div>
-                <div className="overview">{movie?.overview}</div>
+                <div className="overview">{show?.overview}</div>
                 <div className="rating">
-                    {/* stars? */}
-                    <span>{renderStars(movie?.vote_average?.toFixed(1))}</span>
-                    <p className='number_rating'> {movie?.vote_average?.toFixed(1)} of 10.0 ({movie?.vote_count} reviews)</p>
+                    {/* stars */}
+                    <span>{renderStars(show?.vote_average?.toFixed(1))}</span>
+                    <p className='number_rating'> {show?.vote_average?.toFixed(1)} of 10.0 ({show?.vote_count} reviews)</p>
                 </div>
                 <button onClick={addToWatchlist} className="watchlist_button">
                     {/* <IoIosAddCircleOutline />  */}
@@ -82,11 +83,11 @@ function MovieDetails({movie}) {
             </div>
         </div>
         <div className="black_gradient"></div>
-     </MovieDetailsContainer>
+     </TvShowDetailsHomeContainer>
   )
 }
 
-const MovieDetailsContainer = styled.div`
+const TvShowDetailsHomeContainer = styled.div`
     width: 100%;
     min-height: 100vh;
     background-position: center;
@@ -95,7 +96,7 @@ const MovieDetailsContainer = styled.div`
     isolation: isolate;
     position: relative;
 
-    .movie_container{
+    .show_container{
         padding: 8% min(12%, 25em) 2%;
         box-sizing: border-box;
         display: grid;
@@ -103,7 +104,7 @@ const MovieDetailsContainer = styled.div`
         align-items: center;
         gap: 6em;
         color: var(--text-color);
-    
+
         .poster{
             border-radius: 1em;
             height: 35em;
@@ -197,4 +198,4 @@ const MovieDetailsContainer = styled.div`
     }
 `
 
-export default MovieDetails;
+export default TvShowDetailsHome;

@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom';
 function SmallTvShow({show}) {
   return (
     <SmallTvShowContainer>
-      <Link to={'/tv-show/' + show.episode_id + '/details'} className='image_link'>
+      <Link to={'/tv-show/' + show.id + '/details'} className='image_link'>
         <img src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} />
       </Link>
       <div className="details">
         <p className="short_details">
-          {show.first_air_date.split("-")[0]}/SS{show.season_number}/EP{show.episode_number}
+          {show.first_air_date.split("-")[0]}/SS{show.number_of_seasons}/EP{show.number_of_episodes}
         </p>
-        <Link to={'/tv-show/' + show.episode_id + '/details'}>
+        <Link to={'/tv-show/' + show.id + '/details'}>
           <p className="title">{show.name}</p>
         </Link>
       </div>

@@ -8,13 +8,12 @@ function LatestTvShows({perPage}) {
     const [tvShows, setTvShows] = useState([]);
   
     const getTvShowDetails = async (showId) => {
-    //   const detailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
-      const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}/season/${1}/episode/${1}?api_key=${apiKey}`;
+      const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
   
       return fetch(episodeDetailsUrl)
         .then(response => response.json())
-        .then(movieDetails => {
-          return movieDetails.id;
+        .then(showDetails => {
+          return showDetails;
         })
         .catch(() => {
           console.error(`Error fetching TV show details for tv show with id: ${showId}`);
@@ -23,15 +22,16 @@ function LatestTvShows({perPage}) {
     };
     
     const getTvShows = async() => {
-      const url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}`;
+      // const url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}`;
+      const url = `https://api.themoviedb.org/3/tv/top_rated?language=en-US&page=1&api_key=${apiKey}`;
       fetch(url)
       .then(response => response.json())
       .then(data => {
-        // const promises = data.results.map(show => getTvShowDetails(show.id));
-        const promises = data.results.map(async (show) => {
-          const episodeId = await getTvShowDetails(show.id);
-          return { ...show, episode_id: episodeId, episode_number: 1, season_number: 1 };
-        });        
+        const promises = data.results.map(show => getTvShowDetails(show.id));
+        // const promises = data.results.map(async (show) => {
+        //   const episodeId = await getTvShowDetails(show.id);
+        //   return { ...show, episode_number: 1, season_number: 1 };
+        // });        
         Promise.all(promises) 
           .then(showoDetails => {
               const validDetails = showoDetails.filter(detail => detail !== null && detail.poster_path != null);
@@ -56,7 +56,7 @@ function LatestTvShows({perPage}) {
             <h1 className='title'><FaRegCirclePlay />Latest TV Shows</h1> 
             {tvShows?.map((show, i) => {
                 if(i < perPage)
-                  return <TvShow key={show.episode_id} show={show}/>
+                  return <TvShow key={show.id} show={show}/>
             })}
         </LatestTvShowsContainer>
     )

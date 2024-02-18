@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Comment from '../../Comment';
-import { initializeComments } from '../../../utils/commentsDataInitializer';
+import { initialMovieComments, initialTvShowComments } from '../../../utils/commentsDataInitializer';
 
-function MovieComments() {
+function MovieComments({prefix}) {
   const [showMore, setShowMore] = useState(false);
   const [comments, setComments] = useState([]);
 
   const showMoreInformation = () => {
     let moreComments = [];
     comments.forEach((cmnt, i) => {
-      if(i > 2)
+      if(i > 2) 
         moreComments.push(<Comment key={cmnt.id} comment={cmnt} onButtonsClick={handleButtonsClick}/>);
     })
     return moreComments;
@@ -27,7 +27,7 @@ function MovieComments() {
         : comment
     );
 
-    localStorage.setItem('comments', JSON.stringify(updatedComments));
+    localStorage.setItem(`${prefix}_comments`, JSON.stringify(updatedComments));
     setComments(updatedComments);
   }
 
@@ -51,7 +51,7 @@ function MovieComments() {
   
       const updatedComments = [...comments, newComment];
   
-      localStorage.setItem('comments', JSON.stringify(updatedComments));
+      localStorage.setItem(`${prefix}_comments`, JSON.stringify(updatedComments));
       setComments(updatedComments);
   
       // Clear the textarea after submitting
@@ -60,10 +60,14 @@ function MovieComments() {
   }
 
   useEffect(() => {
-    const storedComments = localStorage.getItem('comments');
+    const storedComments = localStorage.getItem(`${prefix}_comments`);
 
     if (!storedComments) {
-      const initialComments = initializeComments();
+      let initialComments = [];
+      if(prefix === "movie")
+        initialComments = initialMovieComments();
+      else if(prefix === "tv")
+        initialComments = initialTvShowComments();
       setComments(initialComments);
     } else {
       setComments(JSON.parse(storedComments));

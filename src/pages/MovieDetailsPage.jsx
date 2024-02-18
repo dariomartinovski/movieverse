@@ -39,7 +39,7 @@ function MovieDetailsPage() {
       <MovieDetailsHome movie={movie}/>
       <YoutubeTrailer title={movie.title}/>
       <MovieFacts movie={movie}/>
-      <MovieComments/>
+      <MovieComments prefix={"movie"}/>
       <Footer/>
     </>
   )

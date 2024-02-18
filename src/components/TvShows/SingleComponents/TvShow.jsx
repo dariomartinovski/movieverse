@@ -5,16 +5,16 @@ import { Link } from 'react-router-dom';
 function TvShow({show}) {
     return (
         <TvShowContainer>
-          <Link to={'/tv-show/' + show.episode_id + '/details'}>
+          <Link to={'/tv-show/' + show.id + '/details'}>
             <img className='upper_part' src={`https://image.tmdb.org/t/p/w185${show.poster_path}`} alt={show.name} />
           </Link>
           <div className="bottom_part">
             <div className="short_details">
               <p className='release_year'>{show.first_air_date.split("-")[0]}</p>
-              <p className='season'>SS {show.season_number}</p>
-              <p className='episode'>EP {show.episode_number}</p>
+              <p className='season'>SS {show.number_of_seasons}</p>
+              <p className='episode'>EP {show.number_of_episodes}</p>
             </div>
-            <Link to={'/tv-show/' + show.episode_id + '/details'}>
+            <Link to={'/tv-show/' + show.id + '/details'}>
               <h4 className='title'>{show.name}</h4>
             </Link>
           </div>
