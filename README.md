@@ -1,5 +1,5 @@
 # Movieverse
-### Online movie database by: Dario Martinovski
+### Online movie database with ReactJS by: Dario Martinovski
 ---
 ### 1. Project description
 Introducing MovieVerse, your ultimate destination for a cinematic journey like never before. 
