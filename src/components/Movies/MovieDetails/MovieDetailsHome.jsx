@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { MdOutlineStar, MdOutlineStarBorder, MdOutlineStarHalf } from "react-icons/md";
-import { IoIosAddCircleOutline } from "react-icons/io";
+import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from "react-icons/io";
 import styled from 'styled-components';
 
 function MovieDetails({movie}) {
@@ -76,8 +76,15 @@ function MovieDetails({movie}) {
                     <p className='number_rating'> {movie?.vote_average?.toFixed(1)} of 10.0 ({movie?.vote_count} reviews)</p>
                 </div>
                 <button onClick={addToWatchlist} className="watchlist_button">
-                    {/* <IoIosAddCircleOutline />  */}
-                    {isInWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+                    {isInWatchlist ? (
+                        <>
+                            <IoIosRemoveCircleOutline /> Remove from watchlist
+                        </>
+                    ) : (
+                        <>
+                            <IoIosAddCircleOutline /> Add to watchlist
+                        </>
+                    )}                
                 </button>
             </div>
         </div>
