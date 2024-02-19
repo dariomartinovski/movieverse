@@ -14,7 +14,7 @@ function renderStars(rating){
     for (let i = 0; i < fullStars; i++) {
         stars.push(<MdOutlineStar key={i} />);
     }
-    if (halfStars == 1) {
+    if (halfStars === 1) {
         stars.push(<MdOutlineStarHalf key={fullStars} />);
     }
     for (let i = 0; i < emptyStars; i++) {

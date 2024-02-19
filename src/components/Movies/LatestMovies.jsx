@@ -43,7 +43,8 @@ function LatestMovies({perPage}) {
   }
 
   useEffect(() => {
-    getMovies()
+    getMovies();
+    // eslint-disable-next-line
   }, [])
 
   return (
@@ -52,6 +53,7 @@ function LatestMovies({perPage}) {
       {movies?.map((movie, i) => {
         if(i < perPage)
           return <Movie key={movie.id} movie={movie}/>
+        return null;
       })}
     </LatestMoviesContainer>
   )

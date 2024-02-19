@@ -47,6 +47,7 @@ function FeaturedMovies() {
 
     useEffect(()=>{
       getFeaturedMovies();
+      // eslint-disable-next-line
     },[])
     
   return (

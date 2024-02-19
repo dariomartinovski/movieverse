@@ -3,12 +3,13 @@ import { FaRegCirclePlay } from "react-icons/fa6";
 import styled from 'styled-components'
 import Movie from './Movies/SingleComponents/Movie';
 import TvShow from './TvShows/SingleComponents/TvShow';
+import { useNavigate } from 'react-router-dom';
 
 function WatchlistItems() {
     const apiKey = "26adac4f0cb5828deafa72ee63667fca";
     const [watchlist, setWatchlist] = useState([]);
     const [watchlistItems, setWatchlistItems] = useState([]);
-
+    const navigate = useNavigate();
 
     const getTvShowDetails = async (showId) => {
         const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
@@ -43,11 +44,9 @@ function WatchlistItems() {
       const promises = storedWatchlist.map(el => {
         let id = el.split("_")[1];
         if (el.startsWith('movie')){
-          // return <Movie movie={getMovieDetails(id)}/>
           return getMovieDetails(id);
         }
         else{
-          // return <TvShow show={getTvShowDetails(id)}/>
           return getTvShowDetails(id);
         }
       });
@@ -64,10 +63,29 @@ function WatchlistItems() {
 
     useEffect(() => {
       const storedWatchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-
       convertItems(storedWatchlist);
       // setWatchlist(storedWatchlist);
     }, []);
+
+    const handleRandomMovieClick = () => {
+      const randomIndex = Math.floor(Math.random() * watchlist.length);
+      const randomMovie = watchlist[randomIndex];
+
+      if(randomMovie.hasOwnProperty("title")){
+        alert(`The random movie is ${randomMovie.title}`);
+        const shoudOpen = window.confirm('Do you want to open the movie?');
+          if (shoudOpen) {
+            navigate(`/movie/${randomMovie.id}/details`);
+          }
+      }
+      else{
+        alert(`The random show is ${randomMovie.name}`);
+        const shoudOpen = window.confirm('Do you want to open the TV show?');
+          if (shoudOpen) {
+            navigate(`/tv-show/${randomMovie.id}/details`);
+          }
+      }
+    }
 
   return (
     <WatchlistItemsContainer>
@@ -81,6 +99,9 @@ function WatchlistItems() {
               return <TvShow key={item.id} show={item}/>
           })}
         </div>
+        {watchlist.length > 0 && 
+          <button className='random_movie_button' onClick={handleRandomMovieClick}>Choose a random movie</button>
+        }
     </WatchlistItemsContainer>
   )
 }
@@ -106,8 +127,33 @@ const WatchlistItemsContainer = styled.div`
     margin-right: 0.25em;
   }
 
+  .random_movie_button{
+    margin-top: 1em;
+    padding: 0.5em 1.5em;
+    border-radius: 2em;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--text-color);
+    border: none;
+    box-shadow: 0.125em 0.25em 0.2em 0 rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    background-color: transparent;
+    border: 0.125em solid var(--text-color);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+  .selected{
+    background-color: red;
+  }
+
   @media (min-width: 47em) {
     flex: 2;
+
+    .random_movie_button:hover{
+      box-shadow: 0 0 0.5em 0.2em #f7f7f750;
+    }
   }
 `
 

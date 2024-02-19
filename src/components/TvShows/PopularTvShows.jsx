@@ -22,14 +22,14 @@ function PopularTvShows({sectionName}) {
     };
     
     const getTvShows = async() => {
-      const currentDate = new Date();
+      // const currentDate = new Date();
       
-      const oneWeekAgo = new Date(currentDate);
-      oneWeekAgo.setDate(currentDate.getDate() - 7);
+      // const oneWeekAgo = new Date(currentDate);
+      // oneWeekAgo.setDate(currentDate.getDate() - 7);
   
       // Format the dates as YYYY-MM-DD
-      const formattedCurrentDate = currentDate.toISOString().split('T')[0];
-      const formattedOneWeekAgo = oneWeekAgo.toISOString().split('T')[0];
+      // const formattedCurrentDate = currentDate.toISOString().split('T')[0];
+      // const formattedOneWeekAgo = oneWeekAgo.toISOString().split('T')[0];
   
       // const url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&sort_by=popularity.desc&primary_release_date.gte=${formattedOneWeekAgo}&primary_release_date.lte=${formattedCurrentDate}`;
       const url = `https://api.themoviedb.org/3/trending/tv/week?language=en-US&api_key=${apiKey}`;
@@ -39,10 +39,6 @@ function PopularTvShows({sectionName}) {
       .then(data => {
         const promises = data.results.map(show => getTvShowDetails(show.id));
 
-        // const promises = data.results.map(async (show) => {
-        //     const episodeId = await getTvShowDetails(show.id);
-        //     return { ...show, episode_number: 1, season_number: 1 };
-        //   }); 
           Promise.all(promises)
           .then(movieDetails => {
               const validDetails = movieDetails.filter(detail => detail !== null && detail.poster_path != null);
@@ -58,7 +54,8 @@ function PopularTvShows({sectionName}) {
     }
   
     useEffect(() => {
-      getTvShows()
+      getTvShows();
+      // eslint-disable-next-line
     }, [])
 
   return (
@@ -67,6 +64,7 @@ function PopularTvShows({sectionName}) {
       {tvShows?.map((show, i) => {
         if(i < 9)
             return <SmallTvShow key={i} show={show}/>
+        return null;
       })}
     </PopularTvShowsContainer>
   )

@@ -51,7 +51,8 @@ function PopularMovies({sectionName}) {
     }
   
     useEffect(() => {
-      getMovies()
+      getMovies();
+      // eslint-disable-next-line
     }, [])
   
 
@@ -61,6 +62,7 @@ function PopularMovies({sectionName}) {
       {movies?.map((movie, i) => {
         if(i < 9)
             return <SmallMovie key={i} movie={movie}/>
+        return null;
       })}
     </PopularMoviesContainer>
   )

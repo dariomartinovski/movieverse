@@ -35,10 +35,10 @@ function YoutubeTrailer({title}) {
       }
     };
 
-    useEffect(()=>{
-      getTrailer();
-      // eslint-disable-next-line
-    },[title])
+    // useEffect(()=>{
+    //   getTrailer();
+    //   // eslint-disable-next-line
+    // },[title])
 
     
   return (

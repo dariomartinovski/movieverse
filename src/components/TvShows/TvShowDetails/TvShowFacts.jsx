@@ -1,16 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 function TvShowFacts({ show }) {
   const [showMore, setShowMore] = useState(false);
-
-  const convertRuntime = (runtime) => {
-    let hours = Math.floor(runtime / 60);
-    let minutes = runtime % 60;
-    if(hours > 0)
-        return `${Math.floor(runtime / 60)} hours ${runtime % 60} minutes`;
-    return `${minutes} minutes`;
-  };
 
   const showMoreInformation = () => {
     let moreTrivia = [];

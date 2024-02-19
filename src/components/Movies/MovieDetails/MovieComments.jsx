@@ -72,6 +72,7 @@ function MovieComments({prefix}) {
     } else {
       setComments(JSON.parse(storedComments));
     }
+    //eslint-disable-next-line
   },[])
 
   return (
