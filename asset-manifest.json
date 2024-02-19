@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Movieverse/static/css/main.fee74f63.css",
-    "main.js": "/Movieverse/static/js/main.f2f990a6.js",
-    "index.html": "/Movieverse/index.html",
-    "main.fee74f63.css.map": "/Movieverse/static/css/main.fee74f63.css.map",
-    "main.f2f990a6.js.map": "/Movieverse/static/js/main.f2f990a6.js.map"
+    "main.css": "/movieverse/static/css/main.fee74f63.css",
+    "main.js": "/movieverse/static/js/main.203ee42f.js",
+    "index.html": "/movieverse/index.html",
+    "main.fee74f63.css.map": "/movieverse/static/css/main.fee74f63.css.map",
+    "main.203ee42f.js.map": "/movieverse/static/js/main.203ee42f.js.map"
   },
   "entrypoints": [
     "static/css/main.fee74f63.css",
-    "static/js/main.f2f990a6.js"
+    "static/js/main.203ee42f.js"
   ]
 }
