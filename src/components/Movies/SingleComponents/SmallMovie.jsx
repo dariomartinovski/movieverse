@@ -6,7 +6,7 @@ function SmallMovie({movie}) {
   return (
     <SmallMovieContainer>
       <Link to={'/movie/' + movie.id + '/details'} className='image_link'>
-        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+        <img src={`https://image.tmdb.org/t/p/w154${movie.poster_path}`} alt={movie.title} />
       </Link>
       <div className="details">
         <p className="short_details">

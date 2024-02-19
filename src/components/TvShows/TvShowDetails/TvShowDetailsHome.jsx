@@ -30,9 +30,11 @@ function TvShowDetailsHome({show}) {
     useEffect(() => {
         const storedWatchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
         setWatchlist(storedWatchlist);
+      }, []);
 
-        setIsInWatchlist(storedWatchlist.includes(`tv_${show.id}`));
-    }, []);
+    useEffect(() => {
+        setIsInWatchlist(watchlist.includes(`tv_${show.id}`));
+    }, [watchlist, show.id]);
 
     const addToWatchlist = () => {
         if (isInWatchlist) {

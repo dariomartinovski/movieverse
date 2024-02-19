@@ -8,11 +8,13 @@ function MovieDetails({movie}) {
     const [isInWatchlist, setIsInWatchlist] = useState(false);
 
     useEffect(() => {
-      const storedWatchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-      setWatchlist(storedWatchlist);
-
-      setIsInWatchlist(storedWatchlist.includes(`movie_${movie.id}`));
-    }, []);
+        const storedWatchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+        setWatchlist(storedWatchlist);
+      }, []);
+    
+      useEffect(() => {
+        setIsInWatchlist(watchlist.includes(`movie_${movie.id}`));
+    }, [watchlist, movie.id]);
 
     const addToWatchlist = () => {
         if (isInWatchlist) {

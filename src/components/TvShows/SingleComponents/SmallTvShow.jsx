@@ -6,7 +6,7 @@ function SmallTvShow({show}) {
   return (
     <SmallTvShowContainer>
       <Link to={'/tv-show/' + show.id + '/details'} className='image_link'>
-        <img src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} />
+        <img src={`https://image.tmdb.org/t/p/w154${show.poster_path}`} alt={show.name} />
       </Link>
       <div className="details">
         <p className="short_details">
