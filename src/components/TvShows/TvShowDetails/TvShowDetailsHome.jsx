@@ -2,58 +2,78 @@ import React, { useState, useEffect } from 'react'
 import { MdOutlineStar, MdOutlineStarBorder, MdOutlineStarHalf } from "react-icons/md";
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from "react-icons/io";
 import styled from 'styled-components';
+import { updateDoc, arrayUnion, arrayRemove, doc, getDoc } from "firebase/firestore";
+import { db } from '../../../firebase/config';
 
-function renderStars(rating){
-    rating = rating / 2;
-    const maxStars = 5;
-    const fullStars = Math.floor(rating);
-    const halfStars = rating % 1 >= 0.5 ? 1 : 0;
-    const emptyStars = maxStars - fullStars - halfStars;
-
-    let stars = [];
-    for (let i = 0; i < fullStars; i++) {
-        stars.push(<MdOutlineStar key={i} />);
-    }
-    if (halfStars === 1) {
-        stars.push(<MdOutlineStarHalf key={fullStars} />);
-    }
-    for (let i = 0; i < emptyStars; i++) {
-        stars.push(<MdOutlineStarBorder key={fullStars + 1 + i} />);
-    }
-    return stars;
-}
-
-function TvShowDetailsHome({show}) {
-    const [watchlist, setWatchlist] = useState([]);
+function TvShowDetailsHome({show, movieverseUser}) {
     const [isInWatchlist, setIsInWatchlist] = useState(false);
 
     useEffect(() => {
-        const storedWatchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-        setWatchlist(storedWatchlist);
-      }, []);
+        const fetchWatchlist = async () => {
+            const userId = movieverseUser.id;
+            const watchlistRef = doc(db, "watchlists", userId);
+    
+          try {
+            const watchlistDoc = await getDoc(watchlistRef);
+            const currentWatchlist = watchlistDoc.data().watchlist_items || [];
+    
+            setIsInWatchlist(currentWatchlist.includes(`tv_${show.id}`));
+          } catch (error) {
+            console.error("Error fetching watchlist:", error);
+          }
+        };
 
-    useEffect(() => {
-        setIsInWatchlist(watchlist.includes(`tv_${show.id}`));
-    }, [watchlist, show.id]);
+        fetchWatchlist();
+      }, [show.id]);
 
-    const addToWatchlist = () => {
-        if (isInWatchlist) {
-            const shouldRemove = window.confirm('Are you sure you want to remove this show from your watchlist?');
-            if (shouldRemove) {
-            const updatedWatchlist = watchlist.filter((id) => id !== `tv_${show.id}`);
-            setWatchlist(updatedWatchlist);
-            localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
-            alert('Successfully removed show from watchlist');
-            setIsInWatchlist(false);
-            }
-        } else {
-        const updatedWatchlist = [...watchlist, `tv_${show.id}`];
-        setWatchlist(updatedWatchlist);
-            localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
-            alert('Successfully added show to watchlist');
-            setIsInWatchlist(true);
+    const addToWatchlist = async () => {
+        const userId = movieverseUser.id;
+        const watchlistRef = doc(db, "watchlists", userId);
+      
+        try {
+            const watchlistDoc = await getDoc(watchlistRef);
+      
+          if (isInWatchlist) {
+            await updateDoc(watchlistRef, {
+                watchlist_items: arrayRemove(`tv_${show.id}`),
+            });
+      
+            alert(`Successfully removed ${show.name} from watchlist`);
+          } else {
+            await updateDoc(watchlistRef, {
+                watchlist_items: arrayUnion(`tv_${show.id}`),
+            });
+      
+            alert(`Successfully added ${show.name} to watchlist`);
+          }
+          
+            const updatedWatchlist = await getDoc(watchlistRef);
+            const updatedMovieIds = updatedWatchlist.data().watchlist_items || [];
+            setIsInWatchlist(updatedMovieIds.includes(`tv_${show.id}`));
+        } catch (error) {
+          console.error("Error updating watchlist:", error);
         }
-    };
+      };
+
+      const renderStars = (rating) => {
+        rating = rating / 2;
+        const maxStars = 5;
+        const fullStars = Math.floor(rating);
+        const halfStars = rating % 1 >= 0.5 ? 1 : 0;
+        const emptyStars = maxStars - fullStars - halfStars;
+    
+        let stars = [];
+        for (let i = 0; i < fullStars; i++) {
+            stars.push(<MdOutlineStar key={i} />);
+        }
+        if (halfStars === 1) {
+            stars.push(<MdOutlineStarHalf key={fullStars} />);
+        }
+        for (let i = 0; i < emptyStars; i++) {
+            stars.push(<MdOutlineStarBorder key={fullStars + 1 + i} />);
+        }
+        return stars;
+    }
 
   return (
     <TvShowDetailsHomeContainer style={{

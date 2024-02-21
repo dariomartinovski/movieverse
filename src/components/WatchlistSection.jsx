@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import PopularMovies from './Movies/PopularMovies'
 import WatchlistItems from './WatchlistItems'
 
-function WatchlistSection({ sectionName }) {
+function WatchlistSection({ sectionName, movieverseUser }) {
   return (
     <WatchlistSectionContainer>
-        <WatchlistItems/>
+        <WatchlistItems movieverseUser={movieverseUser}/>
         <PopularMovies sectionName={sectionName} />
     </WatchlistSectionContainer>
   )

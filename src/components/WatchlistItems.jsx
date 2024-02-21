@@ -4,11 +4,12 @@ import styled from 'styled-components'
 import Movie from './Movies/SingleComponents/Movie';
 import TvShow from './TvShows/SingleComponents/TvShow';
 import { useNavigate } from 'react-router-dom';
+import { doc, getDoc } from "firebase/firestore";
+import { db } from '../firebase/config';
 
-function WatchlistItems() {
+function WatchlistItems({movieverseUser}) {
     const apiKey = "26adac4f0cb5828deafa72ee63667fca";
     const [watchlist, setWatchlist] = useState([]);
-    const [watchlistItems, setWatchlistItems] = useState([]);
     const navigate = useNavigate();
 
     const getTvShowDetails = async (showId) => {
@@ -61,12 +62,6 @@ function WatchlistItems() {
       });
     }
 
-    useEffect(() => {
-      const storedWatchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-      convertItems(storedWatchlist);
-      // setWatchlist(storedWatchlist);
-    }, []);
-
     const handleRandomMovieClick = () => {
       const randomIndex = Math.floor(Math.random() * watchlist.length);
       const randomMovie = watchlist[randomIndex];
@@ -86,6 +81,24 @@ function WatchlistItems() {
           }
       }
     }
+
+    useEffect(() => {
+      const fetchWatchlist = async () => {
+          const userId = movieverseUser.id;
+          const watchlistRef = doc(db, "watchlists", userId);
+  
+        try {
+          const watchlistDoc = await getDoc(watchlistRef);
+          const currentWatchlist = watchlistDoc.data().watchlist_items || [];
+  
+          convertItems(currentWatchlist);
+        } catch (error) {
+          console.error("Error fetching watchlist:", error);
+        }
+      };
+
+      fetchWatchlist();
+    }, []);
 
   return (
     <WatchlistItemsContainer>

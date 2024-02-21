@@ -26,10 +26,14 @@ nav .navlinks{
     justify-self: flex-end;
     display: flex;
 }
-nav .navlinks li{
+nav .navlinks .navlink{
     padding: 1rem 1.5rem;
     list-style: none;
     transition: all 200ms ease;
+    font-weight: bold;
+    color: currentColor;
+    transition: all 200ms ease;
+    cursor: pointer;
 }
 nav .navlinks a{
     text-decoration: none;
@@ -37,6 +41,14 @@ nav .navlinks a{
     font-weight: bold;
     color: currentColor;
     transition: all 200ms ease;
+}
+.logout_button{
+    border: none;
+    background-color: transparent;
+    font-weight: bold;
+    color: currentColor;
+    transition: all 200ms ease;
+    font-size: 1em;
 }
 .toggleButton{
     margin-right: 10vw;
@@ -56,8 +68,9 @@ nav .toggleButton svg{
     nav .navlinks{
         margin-right: 10vw;
     }
-    nav .navlinks li:hover{
+    nav .navlinks .navlink:hover{
         background-color: var(--darkColor);
+        color: var(--lightColor);
     }
     nav .navlinks a:hover{
         color: var(--lightColor);

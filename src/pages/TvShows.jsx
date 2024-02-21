@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import TvShowsSection from '../components/TvShows/TvShowsSection'
 
-function TvShows() {
+function TvShows({movieverseUser}) {
   const TvShowsSectionStyle = {
     marginTop: '3em ',
   };

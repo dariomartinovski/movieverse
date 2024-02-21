@@ -1,8 +1,7 @@
 import "../styles/Navbar.css";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from "react-router-dom";
 // import logo from "../assets/images/signature-logo.svg";
 
 function Navbar() {

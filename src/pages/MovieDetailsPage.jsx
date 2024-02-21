@@ -7,7 +7,7 @@ import YoutubeTrailer from '../components/Movies/MovieDetails/YoutubeTrailer';
 import MovieFacts from '../components/Movies/MovieDetails/MovieFacts';
 import MovieComments from '../components/Movies/MovieDetails/MovieComments';
 
-function MovieDetailsPage() {
+function MovieDetailsPage({movieverseUser}) {
   //path variable
   const { id } = useParams();
   const apiKey = "26adac4f0cb5828deafa72ee63667fca";
@@ -35,8 +35,9 @@ function MovieDetailsPage() {
 
   return (
     <>
+    {console.log(movieverseUser)}
       <Navbar/>
-      <MovieDetailsHome movie={movie}/>
+      <MovieDetailsHome movie={movie} movieverseUser={movieverseUser}/>
       <YoutubeTrailer title={movie.title}/>
       <MovieFacts movie={movie}/>
       <MovieComments prefix={"movie"}/>

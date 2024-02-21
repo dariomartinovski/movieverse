@@ -3,11 +3,11 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import WatchlistSection from '../components/WatchlistSection'
 
-function Watchlist() {
+function Watchlist({movieverseUser}) {
   return (
     <>
       <Navbar/>
-      <WatchlistSection sectionName={"Suggestions"}/>
+      <WatchlistSection sectionName={"Suggestions"} movieverseUser={movieverseUser}/>
       <Footer/>
     </>
   )

@@ -7,7 +7,7 @@ import YoutubeTrailer from '../components/Movies/MovieDetails/YoutubeTrailer';
 import TvShowFacts from '../components/TvShows/TvShowDetails/TvShowFacts';
 import MovieComments from '../components/Movies/MovieDetails/MovieComments';
 
-function TvShowDetails() {
+function TvShowDetails({movieverseUser}) {
   const apiKey = "26adac4f0cb5828deafa72ee63667fca";
   const [tvShow, setTvShow] = useState([]);
   const { id } = useParams();
@@ -36,7 +36,7 @@ function TvShowDetails() {
   return (
     <>
     <Navbar/>
-      <TvShowDetailsHome show={tvShow}/>
+      <TvShowDetailsHome show={tvShow} movieverseUser={movieverseUser}/>
       <YoutubeTrailer title={tvShow.name}/>
       <TvShowFacts show={tvShow}/>
       <MovieComments prefix={"tv"}/>

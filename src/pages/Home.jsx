@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TvShowsSection from '../components/TvShows/TvShowsSection';
 import FeaturedMovies from '../components/Movies/FeaturedMovies';
 import ProductionStudios from '../components/ProductionStudios';
@@ -9,7 +9,7 @@ import Footer from '../components/Footer';
 function Home() {
   return (
     <>
-        <Navbar/>
+        <Navbar />
         <FeaturedMovies/>
         <ProductionStudios/>
         <MovieSection perPage={12} sectionName={"Top 9 this week"}/>

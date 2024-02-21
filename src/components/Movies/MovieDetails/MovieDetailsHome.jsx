@@ -2,39 +2,59 @@ import React, { useState, useEffect } from 'react'
 import { MdOutlineStar, MdOutlineStarBorder, MdOutlineStarHalf } from "react-icons/md";
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from "react-icons/io";
 import styled from 'styled-components';
+import { updateDoc, arrayUnion, arrayRemove, doc, getDoc } from "firebase/firestore";
+import { db } from '../../../firebase/config';
 
-function MovieDetails({movie}) {
-    const [watchlist, setWatchlist] = useState([]);
+function MovieDetailsHome({movie, movieverseUser}) {
     const [isInWatchlist, setIsInWatchlist] = useState(false);
 
     useEffect(() => {
-        const storedWatchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-        setWatchlist(storedWatchlist);
-      }, []);
+        const fetchWatchlist = async () => {
+            const userId = movieverseUser.id;
+            const watchlistRef = doc(db, "watchlists", userId);
     
-      useEffect(() => {
-        setIsInWatchlist(watchlist.includes(`movie_${movie.id}`));
-    }, [watchlist, movie.id]);
-
-    const addToWatchlist = () => {
-        if (isInWatchlist) {
-          const shouldRemove = window.confirm('Are you sure you want to remove this movie from your watchlist?');
-          if (shouldRemove) {
-            const updatedWatchlist = watchlist.filter((id) => id !== `movie_${movie.id}`);
-            setWatchlist(updatedWatchlist);
-            localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
-            alert('Successfully removed movie from watchlist');
-            setIsInWatchlist(false);
+          try {
+            const watchlistDoc = await getDoc(watchlistRef);
+            const currentWatchlist = watchlistDoc.data().watchlist_items || [];
+    
+            setIsInWatchlist(currentWatchlist.includes(`movie_${movie.id}`));
+          } catch (error) {
+            console.error("Error fetching watchlist:", error);
           }
-        } else {
-        const updatedWatchlist = [...watchlist, `movie_${movie.id}`];
-        setWatchlist(updatedWatchlist);
-          localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
-          alert('Successfully added movie to watchlist');
-          setIsInWatchlist(true);
+        };
+
+        fetchWatchlist();
+      }, [movie.id]);
+
+    const addToWatchlist = async () => {
+        const userId = movieverseUser.id;
+        const watchlistRef = doc(db, "watchlists", userId);
+      
+        try {
+            const watchlistDoc = await getDoc(watchlistRef);
+      
+          if (isInWatchlist) {
+            await updateDoc(watchlistRef, {
+                watchlist_items: arrayRemove(`movie_${movie.id}`),
+            });
+      
+            alert('Successfully removed movie from watchlist');
+          } else {
+            await updateDoc(watchlistRef, {
+                watchlist_items: arrayUnion(`movie_${movie.id}`),
+            });
+      
+            alert('Successfully added movie to watchlist');
+          }
+          
+            const updatedWatchlist = await getDoc(watchlistRef);
+            const updatedMovieIds = updatedWatchlist.data().watchlist_items || [];
+            setIsInWatchlist(updatedMovieIds.includes(`movie_${movie.id}`));
+        } catch (error) {
+          console.error("Error updating watchlist:", error);
         }
       };
-
+      
     const renderStars = (rating) => {
         rating = rating / 2;
         const maxStars = 5;
@@ -56,7 +76,7 @@ function MovieDetails({movie}) {
     }
 
     return (
-    <MovieDetailsContainer className='container' style={{
+    <MovieDetailsHomeContainer className='container' style={{
         backgroundImage: movie?.backdrop_path?
         `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
         : 'none',
@@ -91,11 +111,11 @@ function MovieDetails({movie}) {
             </div>
         </div>
         <div className="black_gradient"></div>
-     </MovieDetailsContainer>
+     </MovieDetailsHomeContainer>
   )
 }
 
-const MovieDetailsContainer = styled.div`
+const MovieDetailsHomeContainer = styled.div`
     width: 100%;
     min-height: 100vh;
     background-position: center;
@@ -206,4 +226,4 @@ const MovieDetailsContainer = styled.div`
     }
 `
 
-export default MovieDetails;
+export default MovieDetailsHome;
