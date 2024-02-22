@@ -17,11 +17,11 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home movieverseUser={movieverseUser}/>} />
           <Route path="/login" element={<Login movieverseUser={movieverseUser} setMovieverseUser={setMovieverseUser}/>} />
           <Route path="/logout" element={<Logout movieverseUser={movieverseUser} setMovieverseUser={setMovieverseUser}/>} />
-          <Route path="/movies" element={<Movies />} />
-          <Route path="/tv-shows" element={<TvShows />} />
+          <Route path="/movies" element={<Movies movieverseUser={movieverseUser}/>} />
+          <Route path="/tv-shows" element={<TvShows movieverseUser={movieverseUser}/>} />
           <Route path="/movie/:id/details" element={<MovieDetailsPage movieverseUser={movieverseUser}/>} />
           <Route path="/tv-show/:id/details" element={<TvShowDetailsPage movieverseUser={movieverseUser}/>} />
           <Route path="/watchlist" element={<Watchlist movieverseUser={movieverseUser}/>} />

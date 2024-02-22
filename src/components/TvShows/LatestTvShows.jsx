@@ -24,6 +24,7 @@ function LatestTvShows({perPage}) {
     const getTvShows = async() => {
       // const url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}`;
       const url = `https://api.themoviedb.org/3/tv/top_rated?language=en-US&page=1&api_key=${apiKey}`;
+
       fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -53,7 +54,7 @@ function LatestTvShows({perPage}) {
     return (
         <LatestTvShowsContainer>
             {/* number of episodes, number of seasons */}
-            <h1 className='title'><FaRegCirclePlay />Latest TV Shows</h1> 
+            <h1 className='title'><FaRegCirclePlay /> Popular TV Shows</h1> 
             {tvShows?.map((show, i) => {
                 if(i < perPage)
                   return <TvShow key={show.id} show={show}/>

@@ -22,7 +22,7 @@ function LatestMovies({perPage}) {
   };
   
   const getMovies = async() => {
-    const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}`;
+    const url = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${apiKey}`;
 
     fetch(url)
     .then(response => response.json())
@@ -49,7 +49,7 @@ function LatestMovies({perPage}) {
 
   return (
     <LatestMoviesContainer>
-      <h1 className='title'><FaRegCirclePlay />  Latest Movies</h1> 
+      <h1 className='title'><FaRegCirclePlay />  Popular Movies</h1> 
       {movies?.map((movie, i) => {
         if(i < perPage)
           return <Movie key={movie.id} movie={movie}/>

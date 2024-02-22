@@ -6,7 +6,7 @@ import MovieSection from '../components/Movies/MovieSection';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-function Home() {
+function Home({movieverseUser}) {
   useEffect(() => {
     // Store the current URL in sessionStorage
     sessionStorage.setItem('prevUrl', window.location.pathname);
@@ -14,7 +14,7 @@ function Home() {
   
   return (
     <>
-        <Navbar />
+        <Navbar movieverseUser={movieverseUser}/>
         <FeaturedMovies/>
         <ProductionStudios/>
         <MovieSection perPage={12} sectionName={"Top 9 this week"}/>

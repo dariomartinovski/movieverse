@@ -2,9 +2,10 @@ import "../styles/Navbar.css";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
+import { FaArrowRightLong } from "react-icons/fa6";
 // import logo from "../assets/images/signature-logo.svg";
 
-function Navbar() {
+function Navbar({movieverseUser}) {
   let [menuState, setMenuState] = useState(false);
   let [rotation, setRotation] = useState(0);
 
@@ -64,6 +65,9 @@ function Navbar() {
             </NavLink>
             <NavLink to="/watchlist" onClick={closeMenu}>
               <li className="navlink">Watchlist</li>
+            </NavLink>
+            <NavLink to={movieverseUser ? '/logout': '/login'} onClick={closeMenu}>
+              <li className="navlink">{movieverseUser ? 'Logout' : <>Login <FaArrowRightLong/></>}</li>
             </NavLink>
           </motion.ul>
         )}

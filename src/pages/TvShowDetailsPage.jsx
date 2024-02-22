@@ -42,7 +42,7 @@ function TvShowDetails({movieverseUser}) {
 
   return (
     <>
-    <Navbar/>
+    <Navbar movieverseUser={movieverseUser}/>
       <TvShowDetailsHome show={tvShow} movieverseUser={movieverseUser}/>
       <YoutubeTrailer title={tvShow.name}/>
       <TvShowFacts show={tvShow}/>

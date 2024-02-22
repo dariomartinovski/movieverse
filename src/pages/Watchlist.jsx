@@ -11,7 +11,7 @@ function Watchlist({movieverseUser}) {
 
   return (
     <>
-      <Navbar/>
+      <Navbar movieverseUser={movieverseUser}/>
       <WatchlistSection sectionName={"Suggestions"} movieverseUser={movieverseUser}/>
       <Footer/>
     </>

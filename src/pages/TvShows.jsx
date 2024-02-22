@@ -15,7 +15,7 @@ function TvShows({movieverseUser}) {
 
   return (
     <>
-      <Navbar />
+      <Navbar movieverseUser={movieverseUser}/>
       <TvShowsSection style={TvShowsSectionStyle} perPage={16} sectionName={"Suggestions"}/>
       <Footer />
     </>

@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import MovieSection from '../components/Movies/MovieSection'
 
-function Movies() {
+function Movies({movieverseUser}) {
   const movieSectionStyles = {
     marginTop: '3em ',
   };
@@ -15,7 +15,7 @@ function Movies() {
 
   return (
     <>
-      <Navbar />
+      <Navbar movieverseUser={movieverseUser}/>
       <MovieSection style={movieSectionStyles} perPage={16} sectionName={"Suggestions"}/>
       <Footer />
     </>

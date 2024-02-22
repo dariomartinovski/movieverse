@@ -40,7 +40,7 @@ function MovieDetailsPage({movieverseUser}) {
 
   return (
     <>
-      <Navbar/>
+      <Navbar movieverseUser={movieverseUser}/>
       <MovieDetailsHome movie={movie} movieverseUser={movieverseUser}/>
       <YoutubeTrailer title={movie.title}/>
       <MovieFacts movie={movie}/>

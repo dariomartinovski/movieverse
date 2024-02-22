@@ -26,28 +26,57 @@ function Logout({setMovieverseUser}) {
 
   return (
     <LogoutContainer>
-        <h2>Are you sure you want to log out</h2>
-        <div className="buttons">
-            <button onClick={handleSignOut}>Yes</button>
-            <button onClick={() => {navigate('/login');}}>No</button>
-        </div>
+        <section>
+            <h2>Are you sure you want to log out</h2>
+            <div className="buttons">
+                <button onClick={handleSignOut}>Yes</button>
+                <button onClick={() => {navigate('/login');}}>No</button>
+            </div>
+        </section>
     </LogoutContainer>
   )
 }
 
 const LogoutContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
     min-height: 100vh;
+    display: grid;
+    place-items: center;
 
-    button{
-        padding: 1em 1.5em;
-        border-radius: 1em;
-        margin: 0.5em;
-        cursor: pointer;
+    section{
+        min-height: 10em;
+        padding: 3em 4em;
+        border-radius: 0.5em;
+        background-color: var(--text-color);
+        // border: 0.125em solid white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        box-shadow: 0.15em 0.15em 1em 0.2em rgba(0, 0, 0, 0.25);
+
+        h2{
+            margin-bottom: 1.2em;
+        }
+
+        button:first-of-type{
+            margin-right: 2em;
+            background-color: var(--call-to-action-color);
+        }
+
+        button:last-of-type{
+            box-shadow:0 0 0 0.125em var(--call-to-action-color) inset;
+        }
+
+        button{
+            padding: 1em 1.5em;
+            border-radius: 1em;
+            cursor: pointer;
+            border: none;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
     }
+
 `
 
 export default Logout;
