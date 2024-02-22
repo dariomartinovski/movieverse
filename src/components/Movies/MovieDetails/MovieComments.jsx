@@ -1,47 +1,75 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Comment from '../../Comment';
-import { initialMovieComments, initialTvShowComments } from '../../../utils/commentsDataInitializer';
-import { collection, doc,  getDocs } from "firebase/firestore";
+import { collection, updateDoc, doc, addDoc, setDoc, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase/config";
 
-function MovieComments({movie, movieverseUser, prefix}) {
+function MovieComments({item, movieverseUser}) {
   const [showMore, setShowMore] = useState(false);
   const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
 
   const showMoreInformation = () => {
-    return [];
-    // let moreComments = [];
-    // comments.forEach((cmnt, i) => {
-    //   if(i > 2) 
-    //     moreComments.push(<Comment key={cmnt.owner_id} comment={cmnt} onButtonsClick={handleButtonsClick}/>);
-    // })
-    // return moreComments;
+    let moreComments = [];
+    comments.forEach((cmnt, i) => {
+      if(i >= 3) 
+        moreComments.push(<Comment key={cmnt.owner_id} comment={cmnt} onButtonsClick={handleButtonsClick}/>);
+    })
+    return moreComments;
   }
 
   const toggleShowMore = () => {
     setShowMore(!showMore);
   };
 
-  const handleButtonsClick = (commentId, l_count, d_count) => {
+  const handleButtonsClick = async (commentId, l_count, d_count) => {
     const updatedComments = comments.map((comment) =>
-      comment.id === commentId
+      comment.owner_id === commentId
         ? { ...comment, like_count: comment.like_count + l_count, dislike_count: comment.dislike_count + d_count }
         : comment
     );
+  
+    if (item && item.id) {
+      const commentsCollection = collection(db, `comments_for/${item.id}/comments`);
+      
+      // Fetch the existing comments
+      const querySnapshot = await getDocs(commentsCollection);
+      const existingComments = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  
+      // Find the document to update
+      const commentDoc = existingComments.find(comment => comment.owner_id === commentId);
+  
+      if (commentDoc) {
+        const commentDocRef = doc(commentsCollection, commentDoc.id);
+  
+        // Update the document with the modified comment
+        await updateDoc(commentDocRef, {
+          like_count: commentDoc.like_count + l_count,
+          dislike_count: commentDoc.dislike_count + d_count
+        });
 
-    localStorage.setItem(`${prefix}_comments`, JSON.stringify(updatedComments));
+      }
+    }
+
     setComments(updatedComments);
+  
   }
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
+    if(!movieverseUser){
+      navigate("/login");
+      return;
+    }
+
     const textareaValue = e.target.textarea.value.trim();
   
     if (textareaValue) {
       const newComment = {
-        id: comments.length + 1,
-        name: "Marko",
+        id: movieverseUser.id,
+        owner_id: movieverseUser.id,
+        owner_name: movieverseUser.displayName,
         date: new Date().toLocaleDateString('en-GB', {
           day: '2-digit',
           month: '2-digit',
@@ -54,8 +82,29 @@ function MovieComments({movie, movieverseUser, prefix}) {
   
       const updatedComments = [...comments, newComment];
   
-      localStorage.setItem(`${prefix}_comments`, JSON.stringify(updatedComments));
-      setComments(updatedComments);
+      // TODO update the comments for the movie in the firebase db. 
+      // If a document does not exist for the current item(tv show) make a 
+      // new one first then, add the name of it as item_name and add a collection 
+      // called comments in which we will add the comments. Where each comments id 
+      // is the id of the movieverse user thats adding the comment, and the other fields 
+      // are the same as before, owner_id, owner_name, date, text, like_count, diskike_count
+      try {
+        if (item && item.id) {
+          const commentsCollection = collection(db, `comments_for/${item.id}/comments`);
+  
+          // Add a new document for the comment
+          // await addDoc(commentsCollection, newComment);
+          const newCommentDocRef = doc(commentsCollection, movieverseUser.id);
+          await setDoc(newCommentDocRef, newComment);
+
+          // Fetch the updated comments after adding a new comment
+          const querySnapshot = await getDocs(commentsCollection);
+          const updatedComments = querySnapshot.docs.map(doc => doc.data());
+          setComments(updatedComments);
+        }
+      } catch (error) {
+        console.error("Error adding comment: ", error);
+      }
   
       // Clear the textarea after submitting
       e.target.textarea.value = '';
@@ -64,8 +113,8 @@ function MovieComments({movie, movieverseUser, prefix}) {
 
   useEffect(() => {
     const fetchComments = async () => {
-      if (movie && movie.id && prefix) {
-        const commentsCollection = collection(db, `comments_for/${movie.id}/comments`);
+      if (item && item.id) {
+        const commentsCollection = collection(db, `comments_for/${item.id}/comments`);
         const querySnapshot = await getDocs(commentsCollection);
         const commentsData = querySnapshot.docs.map(doc => doc.data());
         setComments(commentsData);
@@ -73,15 +122,15 @@ function MovieComments({movie, movieverseUser, prefix}) {
     };
 
     fetchComments();
-  }, [movie?.id]);
+  }, [item?.id]);
 
   return (
     <MovieCommentsContainer>
         <p className='comment_number'>{comments.length} Comments</p>
         {/* with after make the line */}
         <form onSubmit={handleSubmitForm}>
-            <textarea name="textarea" cols="30" rows="2" placeholder='Join discussion...' maxLength={250}></textarea>
             {/* <input type="text" placeholder='Join discussion...'/> */}
+            <textarea name="textarea" cols="30" rows="2" placeholder='Join discussion...' maxLength={250}></textarea>
             <button type="submit">Comment</button>
         </form>
 
@@ -93,9 +142,11 @@ function MovieComments({movie, movieverseUser, prefix}) {
                           />
         })}
         {showMore && showMoreInformation()}
-        <button onClick={toggleShowMore} className="show_more_button">
-          {showMore ? "View less" : "View more"}
-        </button>
+        {comments?.length > 3 && 
+          <button onClick={toggleShowMore} className="show_more_button">
+            {showMore ? "View less" : "View more"}
+          </button>
+        }
     </MovieCommentsContainer>
   )
 }

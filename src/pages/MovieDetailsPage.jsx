@@ -35,6 +35,7 @@ function MovieDetailsPage({movieverseUser}) {
   useEffect(() => {
     // Store the current URL in sessionStorage
     sessionStorage.setItem('prevUrl', window.location.pathname);
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -43,7 +44,7 @@ function MovieDetailsPage({movieverseUser}) {
       <MovieDetailsHome movie={movie} movieverseUser={movieverseUser}/>
       <YoutubeTrailer title={movie.title}/>
       <MovieFacts movie={movie}/>
-      <MovieComments movie={movie} prefix={"movie"} movieverseUser={movieverseUser}/>
+      <MovieComments item={movie} movieverseUser={movieverseUser}/>
       <Footer/>
     </>
   )

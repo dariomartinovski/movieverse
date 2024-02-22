@@ -31,11 +31,13 @@ function TvShowDetails({movieverseUser}) {
       getTvShowDetails(id)
       .then(showDetails => {setTvShow(showDetails)})
       .catch(error => {console.error('Error fetching movie details: ', error)});
+      // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
       // Store the current URL in sessionStorage
       sessionStorage.setItem('prevUrl', window.location.pathname);
+      // eslint-disable-next-line
     }, []);
 
   return (
@@ -44,7 +46,7 @@ function TvShowDetails({movieverseUser}) {
       <TvShowDetailsHome show={tvShow} movieverseUser={movieverseUser}/>
       <YoutubeTrailer title={tvShow.name}/>
       <TvShowFacts show={tvShow}/>
-      <MovieComments prefix={"tv"}/>
+      <MovieComments item={tvShow} movieverseUser={movieverseUser}/>
     <Footer/>
     </>  )
 }

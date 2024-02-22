@@ -29,6 +29,7 @@ function MovieDetailsHome({movie, movieverseUser}) {
         };
 
         fetchWatchlist();
+        // eslint-disable-next-line
       }, [movie.id]);
 
     const addToWatchlist = async () => {
@@ -37,8 +38,6 @@ function MovieDetailsHome({movie, movieverseUser}) {
             const watchlistRef = doc(db, "watchlists", userId);
           
             try {
-                const watchlistDoc = await getDoc(watchlistRef);
-          
               if (isInWatchlist) {
                 await updateDoc(watchlistRef, {
                     watchlist_items: arrayRemove(`movie_${movie.id}`),
@@ -77,7 +76,7 @@ function MovieDetailsHome({movie, movieverseUser}) {
         for (let i = 0; i < fullStars; i++) {
             stars.push(<MdOutlineStar key={i} />);
         }
-        if (halfStars == 1) {
+        if (halfStars === 1) {
             stars.push(<MdOutlineStarHalf key={fullStars} />);
         }
         for (let i = 0; i < emptyStars; i++) {
@@ -141,7 +140,7 @@ const MovieDetailsHomeContainer = styled.div`
         display: grid;
         grid-template-columns: 1fr 2fr;
         align-items: center;
-        gap: 6em;
+        gap: 8%;
         color: var(--text-color);
     
         .poster{

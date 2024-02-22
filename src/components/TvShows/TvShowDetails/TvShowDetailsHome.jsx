@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import {
   MdOutlineStar,
   MdOutlineStarBorder,
@@ -14,6 +15,7 @@ import { db } from "../../../firebase/config";
 
 function TvShowDetailsHome({ show, movieverseUser }) {
   const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWatchlist = async () => {
@@ -33,34 +35,39 @@ function TvShowDetailsHome({ show, movieverseUser }) {
     };
 
     fetchWatchlist();
+    // eslint-disable-next-line
   }, [show.id]);
 
   const addToWatchlist = async () => {
-    const userId = movieverseUser.id;
-    const watchlistRef = doc(db, "watchlists", userId);
-
-    try {
-      const watchlistDoc = await getDoc(watchlistRef);
-
-      if (isInWatchlist) {
-        await updateDoc(watchlistRef, {
-          watchlist_items: arrayRemove(`tv_${show.id}`),
-        });
-
-        alert(`Successfully removed ${show.name} from watchlist`);
-      } else {
-        await updateDoc(watchlistRef, {
-          watchlist_items: arrayUnion(`tv_${show.id}`),
-        });
-
-        alert(`Successfully added ${show.name} to watchlist`);
+    if(movieverseUser){
+      const userId = movieverseUser.id;
+      const watchlistRef = doc(db, "watchlists", userId);
+  
+      try {
+        if (isInWatchlist) {
+          await updateDoc(watchlistRef, {
+            watchlist_items: arrayRemove(`tv_${show.id}`),
+          });
+  
+          alert(`Successfully removed ${show.name} from watchlist`);
+        } else {
+          await updateDoc(watchlistRef, {
+            watchlist_items: arrayUnion(`tv_${show.id}`),
+          });
+  
+          alert(`Successfully added ${show.name} to watchlist`);
+        }
+  
+        const updatedWatchlist = await getDoc(watchlistRef);
+        const updatedMovieIds = updatedWatchlist.data().watchlist_items || [];
+        setIsInWatchlist(updatedMovieIds.includes(`tv_${show.id}`));
+      } catch (error) {
+        console.error("Error updating watchlist:", error);
       }
-
-      const updatedWatchlist = await getDoc(watchlistRef);
-      const updatedMovieIds = updatedWatchlist.data().watchlist_items || [];
-      setIsInWatchlist(updatedMovieIds.includes(`tv_${show.id}`));
-    } catch (error) {
-      console.error("Error updating watchlist:", error);
+    }
+    else{
+      //NAVIGATE TO LOGIN THEN COME BACK?
+      navigate("/login");
     }
   };
 
@@ -153,7 +160,7 @@ const TvShowDetailsHomeContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 2fr;
     align-items: center;
-    gap: 6em;
+    gap: 8%;
     color: var(--text-color);
 
     .poster {

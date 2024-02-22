@@ -100,6 +100,7 @@ function WatchlistItems({movieverseUser}) {
       };
 
       fetchWatchlist();
+      // eslint-disable-next-line
     }, [movieverseUser]);
 
   return (

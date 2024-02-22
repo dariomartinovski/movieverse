@@ -9,13 +9,13 @@ function Comment({comment, onButtonsClick}) {
   const handleLike = () => {
     if(disliked){
       setDisliked(false);
-      onButtonsClick(comment.id, +1, -1);
+      onButtonsClick(comment.owner_id, +1, -1);
     }
     else{
       if(liked)
-        onButtonsClick(comment.id, -1, 0);
+        onButtonsClick(comment.owner_id, -1, 0);
       else
-        onButtonsClick(comment.id, 1, 0);
+        onButtonsClick(comment.owner_id, 1, 0);
     }
     setLiked(!liked);
   };
@@ -23,20 +23,20 @@ function Comment({comment, onButtonsClick}) {
   const handleDislike = () => {
     if(liked){
       setLiked(false);
-      onButtonsClick(comment.id, -1, 1);
+      onButtonsClick(comment.owner_id, -1, 1);
     }
     else{
       if(disliked)
-        onButtonsClick(comment.id, 0, -1);
+        onButtonsClick(comment.owner_id, 0, -1);
       else
-        onButtonsClick(comment.id, 0, 1);
+        onButtonsClick(comment.owner_id, 0, 1);
     }
     setDisliked(!disliked);
   };
 
   return (
     <CommentContainer>
-        <p className='name'>{comment?.name}</p>
+        <p className='name'>{comment?.owner_name}</p>
         <p className='date'>{comment?.date}</p>
         <p className='text'>{comment?.text}</p>
         <div className='buttons'>
