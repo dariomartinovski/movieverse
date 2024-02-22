@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import TvShowsSection from '../components/TvShows/TvShowsSection'
@@ -7,6 +7,11 @@ function TvShows({movieverseUser}) {
   const TvShowsSectionStyle = {
     marginTop: '3em ',
   };
+
+  useEffect(() => {
+    // Store the current URL in sessionStorage
+    sessionStorage.setItem('prevUrl', window.location.pathname);
+  }, []);
 
   return (
     <>

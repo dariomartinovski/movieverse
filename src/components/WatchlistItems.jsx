@@ -84,6 +84,7 @@ function WatchlistItems({movieverseUser}) {
 
     useEffect(() => {
       const fetchWatchlist = async () => {
+        if(movieverseUser && movieverseUser.id){
           const userId = movieverseUser.id;
           const watchlistRef = doc(db, "watchlists", userId);
   
@@ -95,10 +96,11 @@ function WatchlistItems({movieverseUser}) {
         } catch (error) {
           console.error("Error fetching watchlist:", error);
         }
+        }
       };
 
       fetchWatchlist();
-    }, []);
+    }, [movieverseUser]);
 
   return (
     <WatchlistItemsContainer>

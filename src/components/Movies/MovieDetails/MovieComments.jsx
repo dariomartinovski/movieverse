@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Comment from '../../Comment';
 import { initialMovieComments, initialTvShowComments } from '../../../utils/commentsDataInitializer';
+import { collection, doc,  getDocs } from "firebase/firestore";
+import { db } from "../../../firebase/config";
 
-function MovieComments({prefix}) {
+function MovieComments({movie, movieverseUser, prefix}) {
   const [showMore, setShowMore] = useState(false);
   const [comments, setComments] = useState([]);
 
   const showMoreInformation = () => {
-    let moreComments = [];
-    comments.forEach((cmnt, i) => {
-      if(i > 2) 
-        moreComments.push(<Comment key={cmnt.id} comment={cmnt} onButtonsClick={handleButtonsClick}/>);
-    })
-    return moreComments;
+    return [];
+    // let moreComments = [];
+    // comments.forEach((cmnt, i) => {
+    //   if(i > 2) 
+    //     moreComments.push(<Comment key={cmnt.owner_id} comment={cmnt} onButtonsClick={handleButtonsClick}/>);
+    // })
+    // return moreComments;
   }
 
   const toggleShowMore = () => {
@@ -60,20 +63,17 @@ function MovieComments({prefix}) {
   }
 
   useEffect(() => {
-    const storedComments = localStorage.getItem(`${prefix}_comments`);
+    const fetchComments = async () => {
+      if (movie && movie.id && prefix) {
+        const commentsCollection = collection(db, `comments_for/${movie.id}/comments`);
+        const querySnapshot = await getDocs(commentsCollection);
+        const commentsData = querySnapshot.docs.map(doc => doc.data());
+        setComments(commentsData);
+      }
+    };
 
-    if (!storedComments) {
-      let initialComments = [];
-      if(prefix === "movie")
-        initialComments = initialMovieComments();
-      else if(prefix === "tv")
-        initialComments = initialTvShowComments();
-      setComments(initialComments);
-    } else {
-      setComments(JSON.parse(storedComments));
-    }
-    //eslint-disable-next-line
-  },[])
+    fetchComments();
+  }, [movie?.id]);
 
   return (
     <MovieCommentsContainer>
@@ -87,7 +87,7 @@ function MovieComments({prefix}) {
 
         {comments?.map((comment, i) => {
           if(i < 3)
-            return <Comment key={comment.id}
+            return <Comment key={comment.owner_id}
                           comment={comment}
                           onButtonsClick={handleButtonsClick}
                           />

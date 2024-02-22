@@ -8,7 +8,6 @@ import MovieFacts from '../components/Movies/MovieDetails/MovieFacts';
 import MovieComments from '../components/Movies/MovieDetails/MovieComments';
 
 function MovieDetailsPage({movieverseUser}) {
-  //path variable
   const { id } = useParams();
   const apiKey = "26adac4f0cb5828deafa72ee63667fca";
   const [movie, setMovie] = useState([]);
@@ -33,14 +32,18 @@ function MovieDetailsPage({movieverseUser}) {
     .catch(error => {console.error('Error fetching movie details: ', error)});
   }, [])
 
+  useEffect(() => {
+    // Store the current URL in sessionStorage
+    sessionStorage.setItem('prevUrl', window.location.pathname);
+  }, []);
+
   return (
     <>
-    {console.log(movieverseUser)}
       <Navbar/>
       <MovieDetailsHome movie={movie} movieverseUser={movieverseUser}/>
       <YoutubeTrailer title={movie.title}/>
       <MovieFacts movie={movie}/>
-      <MovieComments prefix={"movie"}/>
+      <MovieComments movie={movie} prefix={"movie"} movieverseUser={movieverseUser}/>
       <Footer/>
     </>
   )

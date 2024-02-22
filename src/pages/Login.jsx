@@ -1,4 +1,3 @@
-// import FullPageLoader from '../components/FullPageLoader.jsx';
 import {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile } from "firebase/auth";
@@ -10,16 +9,8 @@ import { db } from '../firebase/config';
 function Login({movieverseUser, setMovieverseUser}) {
   const [loginType, setLoginType] = useState('login');
   const [userCredentials, setUserCredentials] = useState({});
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); 
   const navigate = useNavigate();
-    
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setMovieverseUser({['id']: user.uid, ['email']: user.email, ['displayName']: user.displayName});
-    } else {
-        setMovieverseUser(null);
-    }
-  });
 
  const handleCredentials = (e) => {
     setUserCredentials({...userCredentials, [e.target.name]: e.target.value});
@@ -34,7 +25,6 @@ const addWatchlist = async (userId, initialMovieIds = []) => {
     watchlist_items: initialMovieIds,
   });
 };
-
 
  const handleSignUp = (e) => {
     e.preventDefault();
@@ -85,10 +75,32 @@ const hadnleLogin = (e) => {
 }
 
 useEffect(() => {
-    if(movieverseUser != null){
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setMovieverseUser({
+        id: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+      });
+    } else {
+      setMovieverseUser(null);
+    }
+  });
+
+  return () => unsubscribe(); // Cleanup the listener on component unmount
+}, [setMovieverseUser]);
+
+useEffect(() => {
+    const prevUrl = sessionStorage.getItem('prevUrl');
+
+    if (prevUrl && movieverseUser != null) {
+      // Navigate back to the stored URL after the user logs in
+      navigate(prevUrl);
+    }
+    else if(movieverseUser != null){
         navigate("/");
     }
-}, [movieverseUser])
+}, [movieverseUser, navigate])
 
 return (
       <LoginContainer className="container login-page">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import TvShowsSection from '../components/TvShows/TvShowsSection';
 import FeaturedMovies from '../components/Movies/FeaturedMovies';
 import ProductionStudios from '../components/ProductionStudios';
@@ -7,6 +7,11 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 function Home() {
+  useEffect(() => {
+    // Store the current URL in sessionStorage
+    sessionStorage.setItem('prevUrl', window.location.pathname);
+  }, []);
+  
   return (
     <>
         <Navbar />

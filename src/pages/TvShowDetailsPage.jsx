@@ -33,6 +33,11 @@ function TvShowDetails({movieverseUser}) {
       .catch(error => {console.error('Error fetching movie details: ', error)});
     }, [])
 
+    useEffect(() => {
+      // Store the current URL in sessionStorage
+      sessionStorage.setItem('prevUrl', window.location.pathname);
+    }, []);
+
   return (
     <>
     <Navbar/>

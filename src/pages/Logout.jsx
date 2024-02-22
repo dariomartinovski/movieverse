@@ -29,7 +29,7 @@ function Logout({setMovieverseUser}) {
         <h2>Are you sure you want to log out</h2>
         <div className="buttons">
             <button onClick={handleSignOut}>Yes</button>
-            <button onClick={() => {navigate("/")}}>No</button>
+            <button onClick={() => {navigate('/login');}}>No</button>
         </div>
     </LogoutContainer>
   )

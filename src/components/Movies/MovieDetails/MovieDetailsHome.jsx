@@ -1,57 +1,68 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { MdOutlineStar, MdOutlineStarBorder, MdOutlineStarHalf } from "react-icons/md";
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from "react-icons/io";
 import styled from 'styled-components';
 import { updateDoc, arrayUnion, arrayRemove, doc, getDoc } from "firebase/firestore";
 import { db } from '../../../firebase/config';
 
+
 function MovieDetailsHome({movie, movieverseUser}) {
     const [isInWatchlist, setIsInWatchlist] = useState(false);
-
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const fetchWatchlist = async () => {
-            const userId = movieverseUser.id;
-            const watchlistRef = doc(db, "watchlists", userId);
-    
-          try {
-            const watchlistDoc = await getDoc(watchlistRef);
-            const currentWatchlist = watchlistDoc.data().watchlist_items || [];
-    
-            setIsInWatchlist(currentWatchlist.includes(`movie_${movie.id}`));
-          } catch (error) {
-            console.error("Error fetching watchlist:", error);
-          }
+            if(movieverseUser && movieverseUser.id){
+                const userId = movieverseUser.id;
+                const watchlistRef = doc(db, "watchlists", userId);
+        
+              try {
+                const watchlistDoc = await getDoc(watchlistRef);
+                const currentWatchlist = watchlistDoc.data().watchlist_items || [];
+        
+                setIsInWatchlist(currentWatchlist.includes(`movie_${movie.id}`));
+              } catch (error) {
+                console.error("Error fetching watchlist:", error);
+              }
+            }
         };
 
         fetchWatchlist();
       }, [movie.id]);
 
     const addToWatchlist = async () => {
-        const userId = movieverseUser.id;
-        const watchlistRef = doc(db, "watchlists", userId);
-      
-        try {
-            const watchlistDoc = await getDoc(watchlistRef);
-      
-          if (isInWatchlist) {
-            await updateDoc(watchlistRef, {
-                watchlist_items: arrayRemove(`movie_${movie.id}`),
-            });
-      
-            alert('Successfully removed movie from watchlist');
-          } else {
-            await updateDoc(watchlistRef, {
-                watchlist_items: arrayUnion(`movie_${movie.id}`),
-            });
-      
-            alert('Successfully added movie to watchlist');
-          }
+        if(movieverseUser){
+            const userId = movieverseUser.id;
+            const watchlistRef = doc(db, "watchlists", userId);
           
-            const updatedWatchlist = await getDoc(watchlistRef);
-            const updatedMovieIds = updatedWatchlist.data().watchlist_items || [];
-            setIsInWatchlist(updatedMovieIds.includes(`movie_${movie.id}`));
-        } catch (error) {
-          console.error("Error updating watchlist:", error);
+            try {
+                const watchlistDoc = await getDoc(watchlistRef);
+          
+              if (isInWatchlist) {
+                await updateDoc(watchlistRef, {
+                    watchlist_items: arrayRemove(`movie_${movie.id}`),
+                });
+          
+                alert('Successfully removed movie from watchlist');
+              } else {
+                await updateDoc(watchlistRef, {
+                    watchlist_items: arrayUnion(`movie_${movie.id}`),
+                });
+          
+                alert('Successfully added movie to watchlist');
+              }
+              
+                const updatedWatchlist = await getDoc(watchlistRef);
+                const updatedMovieIds = updatedWatchlist.data().watchlist_items || [];
+                setIsInWatchlist(updatedMovieIds.includes(`movie_${movie.id}`));
+            } catch (error) {
+              console.error("Error updating watchlist:", error);
+            }
+        }
+        else{
+            //NAVIGATE TO LOGIN THEN COME BACK?
+            navigate("/login");
         }
       };
       
