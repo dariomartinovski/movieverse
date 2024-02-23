@@ -3,11 +3,10 @@ import React, { useEffect, useState } from 'react'
 import SmallMovie from './SingleComponents/SmallMovie';
 
 function PopularMovies({sectionName}) {
-    const apiKey = "26adac4f0cb5828deafa72ee63667fca";
     const [movies, setMovies] = useState([]);
   
     const getMovieDetails = async (movieId) => {
-      const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+      const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
   
       return fetch(detailsUrl)
         .then(response => response.json())
@@ -30,7 +29,7 @@ function PopularMovies({sectionName}) {
       const formattedCurrentDate = currentDate.toISOString().split('T')[0];
       const formattedOneWeekAgo = oneWeekAgo.toISOString().split('T')[0];
   
-      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=popularity.desc&primary_release_date.gte=${formattedOneWeekAgo}&primary_release_date.lte=${formattedCurrentDate}`;
+      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_API_KEY}&sort_by=popularity.desc&primary_release_date.gte=${formattedOneWeekAgo}&primary_release_date.lte=${formattedCurrentDate}`;
   
       fetch(url)
       .then(response => response.json())

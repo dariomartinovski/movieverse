@@ -3,12 +3,10 @@ import styled from 'styled-components'
 import SmallTvShow from './SingleComponents/SmallTvShow';
 
 function PopularTvShows({sectionName}) {
-    const apiKey = "26adac4f0cb5828deafa72ee63667fca";
     const [tvShows, setTvShows] = useState([]);
   
     const getTvShowDetails = async (showId) => {
-    //   const detailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
-        const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
+        const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
     
         return fetch(episodeDetailsUrl)
         .then(response => response.json())
@@ -31,8 +29,8 @@ function PopularTvShows({sectionName}) {
       // const formattedCurrentDate = currentDate.toISOString().split('T')[0];
       // const formattedOneWeekAgo = oneWeekAgo.toISOString().split('T')[0];
   
-      // const url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&sort_by=popularity.desc&primary_release_date.gte=${formattedOneWeekAgo}&primary_release_date.lte=${formattedCurrentDate}`;
-      const url = `https://api.themoviedb.org/3/trending/tv/week?language=en-US&api_key=${apiKey}`;
+      // const url = `https://api.themoviedb.org/3/discover/tv?api_key=${process.env.REACT_APP_TMDB_API_KEY}&sort_by=popularity.desc&primary_release_date.gte=${formattedOneWeekAgo}&primary_release_date.lte=${formattedCurrentDate}`;
+      const url = `https://api.themoviedb.org/3/trending/tv/week?language=en-US&api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
       
       fetch(url)
       .then(response => response.json())

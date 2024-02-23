@@ -4,11 +4,10 @@ import { FaRegCirclePlay } from "react-icons/fa6";
 import Movie from './SingleComponents/Movie';
 
 function LatestMovies({perPage}) {
-  const apiKey = "26adac4f0cb5828deafa72ee63667fca";
   const [movies, setMovies] = useState([]);
 
   const getMovieDetails = async (movieId) => {
-    const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+    const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
 
     return fetch(detailsUrl)
       .then(response => response.json())
@@ -22,7 +21,7 @@ function LatestMovies({perPage}) {
   };
   
   const getMovies = async() => {
-    const url = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${apiKey}`;
+    const url = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
 
     fetch(url)
     .then(response => response.json())

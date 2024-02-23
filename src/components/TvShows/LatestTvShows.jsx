@@ -4,11 +4,10 @@ import styled from 'styled-components';
 import TvShow from './SingleComponents/TvShow';
 
 function LatestTvShows({perPage}) {
-    const apiKey = "26adac4f0cb5828deafa72ee63667fca";
     const [tvShows, setTvShows] = useState([]);
   
     const getTvShowDetails = async (showId) => {
-      const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
+      const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
   
       return fetch(episodeDetailsUrl)
         .then(response => response.json())
@@ -22,8 +21,7 @@ function LatestTvShows({perPage}) {
     };
     
     const getTvShows = async() => {
-      // const url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}`;
-      const url = `https://api.themoviedb.org/3/tv/top_rated?language=en-US&page=1&api_key=${apiKey}`;
+      const url = `https://api.themoviedb.org/3/tv/top_rated?language=en-US&page=1&api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
 
       fetch(url)
       .then(response => response.json())

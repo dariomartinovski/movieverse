@@ -9,11 +9,10 @@ import MovieComments from '../components/Movies/MovieDetails/MovieComments';
 
 function MovieDetailsPage({movieverseUser}) {
   const { id } = useParams();
-  const apiKey = "26adac4f0cb5828deafa72ee63667fca";
   const [movie, setMovie] = useState([]);
 
   const getMovieDetails = async (movieId) => {
-    const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+    const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
 
     return fetch(detailsUrl)
       .then(response => response.json())

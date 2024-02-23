@@ -8,13 +8,11 @@ import TvShowFacts from '../components/TvShows/TvShowDetails/TvShowFacts';
 import MovieComments from '../components/Movies/MovieDetails/MovieComments';
 
 function TvShowDetails({movieverseUser}) {
-  const apiKey = "26adac4f0cb5828deafa72ee63667fca";
   const [tvShow, setTvShow] = useState([]);
   const { id } = useParams();
 
     const getTvShowDetails = async (showId) => {
-    //   const detailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
-      const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
+      const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
   
       return fetch(episodeDetailsUrl)
         .then(response => response.json())

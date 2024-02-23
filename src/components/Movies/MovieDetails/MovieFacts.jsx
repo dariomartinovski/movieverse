@@ -4,11 +4,11 @@ import styled from "styled-components";
 function MovieFacts({ movie }) {
   const [movieDetails, setMovieDetails] = useState();
   const [showMore, setShowMore] = useState(false);
-  const omdb_api_key = "9a3a3841";
+  // const omdb_api_key = "9a3a3841";
 
   const getMovieDetails = async (imdbId) => {
     if (imdbId && typeof imdbId === "string") {
-      const detailsUrl = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=${omdb_api_key}`;
+      const detailsUrl = `https://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=${process.env.REACT_APP_OMDB_API_KEY}`;
 
       return fetch(detailsUrl)
         .then((response) => response.json())

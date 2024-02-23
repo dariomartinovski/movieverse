@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { getFromCache, saveToCache } from '../../../utils/youtubeTrailerCache';
 
 function YoutubeTrailer({title}) {
-    const youtubeApiKey = "AIzaSyBKlBCol0arfQuYcziLUnrzv88ys_D-z1Y";
 
     const getTrailer = async () => {
       const cachedData = getFromCache();
@@ -15,7 +14,7 @@ function YoutubeTrailer({title}) {
         iframe.src = `https://www.youtube.com/embed/${cachedData.videoId}`;
       } else {
         if (title && typeof title === 'string') {
-          const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(`${title} trailer`)}&key=${youtubeApiKey}`;
+          const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(`${title} trailer`)}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`;
     
           try {
             const response = await fetch(apiUrl);

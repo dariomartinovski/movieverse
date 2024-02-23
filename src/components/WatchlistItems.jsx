@@ -8,12 +8,11 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from '../firebase/config';
 
 function WatchlistItems({movieverseUser}) {
-    const apiKey = "26adac4f0cb5828deafa72ee63667fca";
     const [watchlist, setWatchlist] = useState([]);
     const navigate = useNavigate();
 
     const getTvShowDetails = async (showId) => {
-        const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${apiKey}`;
+        const episodeDetailsUrl = `https://api.themoviedb.org/3/tv/${showId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
     
         return fetch(episodeDetailsUrl)
           .then(response => response.json())
@@ -27,7 +26,7 @@ function WatchlistItems({movieverseUser}) {
     };
 
     const getMovieDetails = async (movieId) => {
-        const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+        const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
     
         return fetch(detailsUrl)
           .then(response => response.json())
