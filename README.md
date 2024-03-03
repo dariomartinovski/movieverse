@@ -613,5 +613,5 @@ One more thing im using firebase for is *hosting*. The application is deployed a
 
 ---
 
-The entire code source code is in the main branch of the repository **https://github.com/dariomartinovski/movieverse**\
+The entire code source code is in the main branch of the repository **https://github.com/dariomartinovski/movieverse** \
 The application is also hosted on firebase: **https://movieverse-5c81e.web.app/**
