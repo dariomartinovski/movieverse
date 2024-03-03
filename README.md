@@ -587,11 +587,31 @@ Here i'm fetching the users watchlist from the db and then parsing it into a mov
 One more thing im using firebase for is *hosting*. The application is deployed and runing on firebase.
 
 ### 4. Additional images and links
-  <img src="https://github.com/dariomartinovski/ShooterHero/assets/80409852/64c1693a-6738-46b8-a5f1-328c93e29e4c" alt="Почетен екран" style="width: 440px;">
+#### 4.1 Home page
+   <img src="https://github.com/dariomartinovski/movieverse/assets/80409852/a152dca1-c3cb-4a91-9f73-55fad892c80e" alt="Home page" style="width: 440px;">
+  <img src="https://github.com/dariomartinovski/movieverse/assets/80409852/a325952f-1e8f-472a-8db8-ef2eab2ed30a" alt="Home page movies" style="width: 440px;">
+  <img src="https://github.com/dariomartinovski/movieverse/assets/80409852/966792b6-3ec3-4317-892b-1a840e1ecb57" alt="Home page tv shows" style="width: 440px;">
   
-  
----
+#### 4.2 Movies page
+<img src="https://github.com/dariomartinovski/movieverse/assets/80409852/be0be833-60a2-450f-8414-10c355899784" alt="Movie details page" style="width: 440px;">
 
+#### 4.3 TV shows page
+<img src="https://github.com/dariomartinovski/movieverse/assets/80409852/b0d16c32-2cee-466b-9a90-2e718983b069" alt="TV show details page" style="width: 440px;">
+
+#### 4.4 Watchlist
+<img src="https://github.com/dariomartinovski/movieverse/assets/80409852/357bb07a-521d-4ccf-b87d-d981c2f9b017" alt="Watchlist page" style="width: 440px;">
+
+#### 4.5 Login page
+<img src="https://github.com/dariomartinovski/movieverse/assets/80409852/fe8193b4-d738-4254-9dd4-cc7879122e96" alt="Sign in page" style="height: 250px;">
+<img src="https://github.com/dariomartinovski/movieverse/assets/80409852/5cd44029-ebb9-4f09-a946-93c565b1b350" alt="Sign up page" style="height: 250px;">
+
+#### 4.6 Movie details
+<img src="https://github.com/dariomartinovski/movieverse/assets/80409852/764b34a3-0a66-42c9-8c40-6c6eef1236e5" alt="Movie details page - home" style="width: 440px;">
+<img src="https://github.com/dariomartinovski/movieverse/assets/80409852/f824ae25-03bc-4e7f-8b5b-dbaca8de845c" alt="Movie details page - trailer" style="width: 440px;">
+<img src="https://github.com/dariomartinovski/movieverse/assets/80409852/20645652-828d-41c0-b7a0-bc9f2390bd44" alt="Movie details page - did you know" style="width: 440px;">
+<img src="https://github.com/dariomartinovski/movieverse/assets/80409852/a0fb6c2c-0423-4875-b37f-87d510fe05ad" alt="Movie details page - comments" style="width: 440px;">
+
+---
 
 The entire code source code is in the main branch of the repository **https://github.com/dariomartinovski/movieverse**\
 The application is also hosted on firebase: **https://movieverse-5c81e.web.app/**
