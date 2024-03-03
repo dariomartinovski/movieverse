@@ -4,7 +4,7 @@ import { MdOutlineStar, MdOutlineStarBorder, MdOutlineStarHalf } from "react-ico
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from "react-icons/io";
 import styled from 'styled-components';
 import { updateDoc, arrayUnion, arrayRemove, doc, getDoc } from "firebase/firestore";
-import { db } from '../../../firebase/config';
+import { db } from '../../firebase/config';
 
 
 function MovieDetailsHome({movie, movieverseUser}) {

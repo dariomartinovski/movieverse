@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Comment from '../../Comment';
+import Comment from '../SingleComponents/Comment';
 import { collection, updateDoc, doc, addDoc, setDoc, getDocs } from "firebase/firestore";
-import { db } from "../../../firebase/config";
+import { db } from "../../firebase/config";
 
-function MovieComments({item, movieverseUser}) {
+function Comments({item, movieverseUser}) {
   const [showMore, setShowMore] = useState(false);
   const [comments, setComments] = useState([]);
   const navigate = useNavigate();
@@ -125,7 +125,7 @@ function MovieComments({item, movieverseUser}) {
   }, [item?.id]);
 
   return (
-    <MovieCommentsContainer>
+    <CommentsContainer>
         <p className='comment_number'>{comments.length} Comments</p>
         {/* with after make the line */}
         <form onSubmit={handleSubmitForm}>
@@ -147,11 +147,11 @@ function MovieComments({item, movieverseUser}) {
             {showMore ? "View less" : "View more"}
           </button>
         }
-    </MovieCommentsContainer>
+    </CommentsContainer>
   )
 }
 
-const MovieCommentsContainer = styled.div`
+const CommentsContainer = styled.div`
     padding: 2% min(12%, 25em);
     color: var(--text-color);
 
@@ -226,4 +226,4 @@ const MovieCommentsContainer = styled.div`
     }
 `
 
-export default MovieComments
+export default Comments;

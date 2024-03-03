@@ -1,7 +1,7 @@
 import React from 'react'
-import LatestTvShows from './LatestTvShows'
+import LatestTvShows from '../ShowcaseComponents/LatestTvShows'
+import PopularTvShows from '../ShowcaseComponents/PopularTvShows'
 import styled from 'styled-components'
-import PopularTvShows from './PopularTvShows'
 
 function TvShowsSection({style, perPage, sectionName}) {
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import TvShowsSection from '../components/TvShows/TvShowsSection'
+import TvShowsSection from '../components/SectionComponents/TvShowsSection'
 
 function TvShows({movieverseUser}) {
   const TvShowsSectionStyle = {

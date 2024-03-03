@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
-import SmallTvShow from './SingleComponents/SmallTvShow';
+import SmallTvShow from '../SingleComponents/SmallTvShow';
 
 function PopularTvShows({sectionName}) {
     const [tvShows, setTvShows] = useState([]);

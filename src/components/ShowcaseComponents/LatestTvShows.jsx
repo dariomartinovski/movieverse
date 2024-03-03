@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { FaRegCirclePlay } from "react-icons/fa6";
 import styled from 'styled-components';
-import TvShow from './SingleComponents/TvShow';
+import TvShow from '../SingleComponents/TvShow';
 
 function LatestTvShows({perPage}) {
     const [tvShows, setTvShows] = useState([]);

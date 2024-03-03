@@ -1,10 +1,9 @@
 import {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile } from "firebase/auth";
-import { auth } from '../firebase/config';
 import { useNavigate } from 'react-router-dom';
 import { collection, doc, setDoc } from "firebase/firestore";
-import { db } from '../firebase/config';
+import { db, auth } from '../firebase/config';
 import { IoWarningOutline } from "react-icons/io5";
 
 function Login({movieverseUser, setMovieverseUser}) {

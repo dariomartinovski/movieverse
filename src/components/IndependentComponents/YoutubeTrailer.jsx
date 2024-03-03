@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { FaRegCirclePlay } from "react-icons/fa6";
 import styled from 'styled-components';
-import { getFromCache, saveToCache } from '../../../utils/youtubeTrailerCache';
+import { getFromCache, saveToCache } from '../../utils/youtubeTrailerCache';
 
 function YoutubeTrailer({title}) {
 

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import MovieDetailsHome from '../components/Movies/MovieDetails/MovieDetailsHome';
-import YoutubeTrailer from '../components/Movies/MovieDetails/YoutubeTrailer';
-import MovieFacts from '../components/Movies/MovieDetails/MovieFacts';
-import MovieComments from '../components/Movies/MovieDetails/MovieComments';
+import MovieDetailsHome from '../components/IndependentComponents/MovieDetailsHome';
+import YoutubeTrailer from '../components/IndependentComponents/YoutubeTrailer';
+import MovieFacts from '../components/IndependentComponents/MovieFacts';
+import Comments from '../components/ShowcaseComponents/Comments';
 
 function MovieDetailsPage({movieverseUser}) {
   const { id } = useParams();
@@ -43,7 +43,7 @@ function MovieDetailsPage({movieverseUser}) {
       <MovieDetailsHome movie={movie} movieverseUser={movieverseUser}/>
       <YoutubeTrailer title={movie.title}/>
       <MovieFacts movie={movie}/>
-      <MovieComments item={movie} movieverseUser={movieverseUser}/>
+      <Comments item={movie} movieverseUser={movieverseUser}/>
       <Footer/>
     </>
   )

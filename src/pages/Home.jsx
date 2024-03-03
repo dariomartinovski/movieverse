@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import TvShowsSection from '../components/TvShows/TvShowsSection';
-import FeaturedMovies from '../components/Movies/FeaturedMovies';
-import ProductionStudios from '../components/ProductionStudios';
-import MovieSection from '../components/Movies/MovieSection';
+import TvShowsSection from '../components/SectionComponents/TvShowsSection';
+import FeaturedMovies from '../components/ShowcaseComponents/FeaturedMovies';
+import ProductionStudios from '../components/IndependentComponents/ProductionStudios';
+import MovieSection from '../components/SectionComponents/MovieSection';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 

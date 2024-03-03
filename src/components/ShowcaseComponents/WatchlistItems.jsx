@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { FaRegCirclePlay } from "react-icons/fa6";
 import styled from 'styled-components'
-import Movie from './Movies/SingleComponents/Movie';
-import TvShow from './TvShows/SingleComponents/TvShow';
+import Movie from '../SingleComponents/Movie';
+import TvShow from '../SingleComponents/TvShow';
 import { useNavigate } from 'react-router-dom';
 import { doc, getDoc } from "firebase/firestore";
-import { db } from '../firebase/config';
+import { db } from '../../firebase/config';
 
 function WatchlistItems({movieverseUser}) {
     const [watchlist, setWatchlist] = useState([]);

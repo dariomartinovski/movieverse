@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import PopularMovies from './Movies/PopularMovies'
-import WatchlistItems from './WatchlistItems'
+import PopularMovies from '../ShowcaseComponents/PopularMovies'
+import WatchlistItems from '../ShowcaseComponents/WatchlistItems'
 
 function WatchlistSection({ sectionName, movieverseUser }) {
   return (

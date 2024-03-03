@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import React from 'react'
-import LatestMovies from './LatestMovies'
-import PopularMovies from './PopularMovies'
+import LatestMovies from '../ShowcaseComponents/LatestMovies'
+import PopularMovies from '../ShowcaseComponents/PopularMovies'
 
 function MovieSection({ style, perPage, sectionName }) {
   return (

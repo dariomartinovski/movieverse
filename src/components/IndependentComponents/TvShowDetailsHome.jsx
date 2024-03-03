@@ -11,7 +11,7 @@ import {
 } from "react-icons/io";
 import styled from "styled-components";
 import { updateDoc, arrayUnion, arrayRemove, doc, getDoc } from "firebase/firestore";
-import { db } from "../../../firebase/config";
+import { db } from "../../firebase/config";
 
 function TvShowDetailsHome({ show, movieverseUser }) {
   const [isInWatchlist, setIsInWatchlist] = useState(false);

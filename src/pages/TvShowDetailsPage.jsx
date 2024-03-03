@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import TvShowDetailsHome from '../components/TvShows/TvShowDetails/TvShowDetailsHome';
-import YoutubeTrailer from '../components/Movies/MovieDetails/YoutubeTrailer';
-import TvShowFacts from '../components/TvShows/TvShowDetails/TvShowFacts';
-import MovieComments from '../components/Movies/MovieDetails/MovieComments';
+import TvShowDetailsHome from '../components/IndependentComponents/TvShowDetailsHome';
+import YoutubeTrailer from '../components/IndependentComponents/YoutubeTrailer';
+import TvShowFacts from '../components/IndependentComponents/TvShowFacts';
+import Comments from '../components/ShowcaseComponents/Comments';
 
 function TvShowDetails({movieverseUser}) {
   const [tvShow, setTvShow] = useState([]);
@@ -44,7 +44,7 @@ function TvShowDetails({movieverseUser}) {
       <TvShowDetailsHome show={tvShow} movieverseUser={movieverseUser}/>
       <YoutubeTrailer title={tvShow.name}/>
       <TvShowFacts show={tvShow}/>
-      <MovieComments item={tvShow} movieverseUser={movieverseUser}/>
+      <Comments item={tvShow} movieverseUser={movieverseUser}/>
     <Footer/>
     </>  )
 }

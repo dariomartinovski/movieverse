@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import {React, useState, useEffect} from 'react'
 import { FaRegCirclePlay } from "react-icons/fa6";
-import Movie from './SingleComponents/Movie';
+import Movie from '../SingleComponents/Movie';
 
 function LatestMovies({perPage}) {
   const [movies, setMovies] = useState([]);

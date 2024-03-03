@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import WatchlistSection from '../components/WatchlistSection'
+import WatchlistSection from '../components/SectionComponents/WatchlistSection'
 
 function Watchlist({movieverseUser}) {
   useEffect(() => {
