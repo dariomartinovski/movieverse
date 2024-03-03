@@ -65,7 +65,7 @@ function PopularTvShows({sectionName}) {
         return null;
       })}
     </PopularTvShowsContainer>
-  )
+  ) 
 }
 
 const PopularTvShowsContainer = styled.div`

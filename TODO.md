@@ -85,160 +85,513 @@ You cannot edit a comment, but you can only leave one comment per movie, so if y
 You can like and dislike comments, by clicking the thumbs up for like, or thumbs down for disliking a comment.
 
 ##
-### 3. Претставување на проблемот
-### 3.1 Податочни структури
-Главните податочни структури во оваа апликација се класи, листи, основните податочни типови float, integer, bool, како и Unity специфичните типови како што се GameObject и Transform.
-```c#
-public class LogicScript : MonoBehaviour
-{
-    public int CurretnLives = 5;
-    public int Score = 0;
-    private bool GamePaused = false;
-    private bool GameActive = false;
+### 3. Problem representation
+#### 3.1 Application data
+The data for this application comes from few apis, three to be precise.\
+The APIs used:
+- TMDB API - https://www.themoviedb.org/
+- OMDB API - https://www.omdbapi.com/
+- Youtube API - https://developers.google.com/youtube/
 
-    public Text ScoreDisplay;
-    public Text TotalScore;
-    public Text EnemiesKilled;
-    public Text HighScore;
-    public Text StartScreenHighScore;
+#### 3.1.1 Using the TMDB API
+```jsx
+function FeaturedMovies() {
+    const [featuredMovies, setFeaturedMovies] = useState([]);
+    const featuredMoviesIDs = [438631, 76341, 866398, 335984, 755566];
+    const featuredMoviesBackgrounds = ['lzWHmYdfeFiMIY4JaMmtR7GEli3.jpg', 'cfl0C5WsX7q8LeHnFPBS1s656A.jpg', 'tL8fzn7JaBzRJKsE1W6GrVxmMQj.jpg', 'ilRyazdMJwN05exqhwK4tMKBYZs.jpg', 'yjZM4QrgA7PqX18Es6DxvJQH3ba.jpg'];
+    const youtubeTrailerRef = useRef(null);
 
-    public GameObject GameFinishedScreen;
-    public GameObject gameWonScreen;
-    public GameObject gameLostScreen;
-    public GameObject gamePausedScreen;
-    public GameObject startGameScreen;
-    private bool SomethingDispalyed = false;
+    const getMovieDetails = async (movieId) => {
+        const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
+    
+        return fetch(detailsUrl)
+          .then(response => response.json())
+          .then(movieDetails => {
+            return movieDetails;
+          })
+          .catch(() => {
+            console.error(`Error fetching movie details for movie with id: ${movieId}`);
+            return null;
+          });
+      };
 
-    public void Start() {
-        PlayerPrefs.SetInt("HighScore", Math.Max(PlayerPrefs.GetInt("HighScore"), 0));
-        SetKillsCounter();
-        StartScreenHighScore.text = "High score: " + PlayerPrefs.GetInt("HighScore").ToString();
-    }
+    const getFeaturedMovies = async () => {
+        const promises = featuredMoviesIDs.map(movieId => getMovieDetails(movieId));
 
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape) && GameActive)
-        {
-            //pause game
-            if (GamePaused)
-            {
-                gamePausedScreen.SetActive(false);
-            }
-            else
-            {
-                gamePausedScreen.SetActive(true);
-            }
-            GamePaused = !GamePaused;
-        }
-    }
+        Promise.all(promises)
+        .then(movieDetails => {
+            const validDetails = movieDetails.filter(detail => detail !== null);
+            setFeaturedMovies(validDetails);
+          })
+        .catch(error => {
+            console.error("Error fetching movie details:", error);
+        });
+    } 
 
-    public void TakeDamage(int num = 1) {
-        CurretnLives -= num;
-        ScoreDisplay.text = CurretnLives.ToString();
-    }
+    const scrollToTrailer = () => {
+      if (youtubeTrailerRef.current) {
+        youtubeTrailerRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
 
-    public void Hit() {
-        Score++;
-        SetKillsCounter();
-    }
-
-    public void SetKillsCounter() {
-        ScoreDisplay.text = "Score: " + Score.ToString();
-    }
-
-    public void GameOver()
-    {
-        if (!SomethingDispalyed)
-        {
-            gameLostScreen.SetActive(true);
-            DisplayInfo();
-            SomethingDispalyed = true;
-        }
-    }
-
-    public void GameWon()
-    {
-        if (!SomethingDispalyed)
-        {
-            gameWonScreen.SetActive(true);
-            DisplayInfo();
-            SomethingDispalyed = true;
-        }
-    }
-
-    public bool PausedGame() {
-        //make game paused screen
-        return GamePaused;
-    }
-
-    public void ResumeGame() {
-        if (GamePaused)
-        {
-            gamePausedScreen.SetActive(false);
-        }
-        else
-        {
-            gamePausedScreen.SetActive(true);
-        }
-        GamePaused = !GamePaused;
-    }
-
-    public void DisplayInfo()
-    {
-        GameActive = false;
-        GameFinishedScreen.SetActive(true);
-
-        // Update high score
-        PlayerPrefs.SetInt("HighScore", Math.Max(PlayerPrefs.GetInt("HighScore"), Score * 10));
-        
-        TotalScore.text = "Score: " + (Score * 10).ToString();
-        EnemiesKilled.text = "Total enemies killed: " + Score.ToString();
-        HighScore.text = "High score: " + PlayerPrefs.GetInt("HighScore").ToString();
-    }
-
-    public void RestartGame() {
-        GameActive = false;
-        startGameScreen.SetActive(true);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+    useEffect(()=>{
+      getFeaturedMovies();
+    },[])
 }
 ```
-Ова е кодот на LogicScript класата. \
-\
-Најпрво се чуваат променливи за бројот на моментални животи(5), потоа се чува променлива за поените. GamePaused променелнивата ни кажува дали играта е паузирана, додека GameActive, дали е завршена играта или не. \
-Потоа чувам повеќе променливи од тип Text, кој е специфичен за Unity, и таа променлива ја добива вредноста преку drag-and-drop на соодветната Text компонента од Unity едиторот. \
-Наредно се чуваат GameObject променливи, кои на сличен начин како претходната Text компонента, вредност добиваат преку drag-and-drop во Unity едиторот. Тие исто така може да добијат вредност преку код, со земање на компонентата со соодветен таг. \
-\
-Најпрво кога се вчитува скриптата се извршува **Start** функцијата, која се состои од три линии код. Најпрво се зачувува PlayerPref HighScore, со кој може да симулираме Highscore функционалност, таа информација се зачувува локално на нашиот компјтуер. Се користи Math max со 0, бидејќи може да не постои претходна игра. Наредните линии само менуваат text полиња соодветни, за поени и најголеми поени на почетниот екран. \
-\
-Функција која се извршува континуирано е методот **Update**, каде слушаме за клик на копчето *Escape* од тестатура, и ако е кликнато истото ја менуваме промелнивата GamePaused, која носи соодветни последици. 
-\
-**TakeDamage** е функција која ја повикуваме од друга скрипта, кога ќе настане колизија помеѓу херојот и неговите противници. Бројот на одземани животи може да се менува, default вредност е 1. \
-\
-**Hit** фунцијата е функција која го зголемува бројот на поени на играчот и таа се повикува кога некој куршум ќе се удри во противникот.
-```c#
-void OnTriggerEnter2D(Collider2D Other)
-    {
-        if (Other.CompareTag("Enemy"))
-        {
-            Destroy(Other.gameObject);
-            Destroy(gameObject);
-            Logic.Hit();
-        }
-    }
-```
-Вака изгледа функцијата, од каде се повикува методот Hit. OnTriggerEnter2D е специјална функција од Unity, која се повикува кога моменталниот објект ќе се судри со друг објект, и тој друг објект се наоѓа во промелнивата Collider2D Other. Со Destroy се уништува објектот со кој е направена колизија и моменталниот објект. \
-\
-**GameOver** функцијата е слична со **GameWon** функцијата. Најпрво во функцијата се проверува дали веќе има нешто прикажано на екран, ако има не прави ништо, а ако нема тогаш стави го објектот gameOverScreen да биде активен, кој на почетокот во UnityEditor-от беше ставен на неактивен, односно да не се гледа. Потоа само се менуваат некои текст полиња во **DisplayInfo** функцијата.
+<p align="center">
+    <sup>Code insert from the Featured movies component that is shown on the home page.</sup>
+</p> 
+Firstly here i'm using the TMDB API.
 
-### 4. Дополнителни слики од играта
+In the *useEffect* hook i'm calling the *getFeaturedMovies()* function, which is an asyncronous function. It's asyncronous because it's calling another function *getMovieDetails(movieID)* that's getting the detailed infromation about the predefined movie ids from the api.
+
+```js
+{
+  "adult": false,
+  "backdrop_path": "/lzWHmYdfeFiMIY4JaMmtR7GEli3.jpg",
+  "belongs_to_collection": {
+    "id": 726871,
+    "name": "Dune Collection",
+    "poster_path": "/wcVafar6Efk3YgFvh8oZQ4yHL6H.jpg",
+    "backdrop_path": "/iCFFmXkK5FdIzqZyyQQEdpkTo8C.jpg"
+  },
+  "budget": 165000000,
+  "genres": [
+    {
+      "id": 878,
+      "name": "Science Fiction"
+    },
+    {
+      "id": 12,
+      "name": "Adventure"
+    }
+  ],
+  "homepage": "https://www.dunemovie.com/",
+  "id": 438631,
+  "imdb_id": "tt1160419",
+  "original_language": "en",
+  "original_title": "Dune",
+  "overview": "Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, must travel to the most dangerous planet in the universe to ensure the future of his family and his people. As malevolent forces explode into conflict over the planet's exclusive supply of the most precious resource in existence-a commodity capable of unlocking humanity's greatest potential-only those who can conquer their fear will survive.",
+  "popularity": 1133.192,
+  "poster_path": "/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
+  "production_companies": [
+    {
+      "id": 923,
+      "logo_path": "/8M99Dkt23MjQMTTWukq4m5XsEuo.png",
+      "name": "Legendary Pictures",
+      "origin_country": "US"
+    }
+  ],
+  "production_countries": [
+    {
+      "iso_3166_1": "US",
+      "name": "United States of America"
+    }
+  ],
+  "release_date": "2021-09-15",
+  "revenue": 433758183,
+  "runtime": 155,
+  "spoken_languages": [
+    {
+      "english_name": "Mandarin",
+      "iso_639_1": "zh",
+      "name": "普通话"
+    },
+    {
+      "english_name": "English",
+      "iso_639_1": "en",
+      "name": "English"
+    }
+  ],
+  "status": "Released",
+  "tagline": "Beyond fear, destiny awaits.",
+  "title": "Dune",
+  "video": false,
+  "vote_average": 7.791,
+  "vote_count": 10339
+}
+```
+<p align="center">
+    <sup>exmaple response object from the call of https://api.themoviedb.org/3/movie/${movieId} endpoint</sup>
+</p>  
+
+Then after that i'm displaying the information from the object.\
+I'm using the same API call in the LatestMovies, LatestTvShows, PopularMovies, PopularTvShows, WatchlistItems, MovieDetailsHome and TvShowDetailsHome components.
+
+#### 3.1.2 Using the OMDB API
+```jsx
+function MovieFacts({ movie }) {
+  const [movieDetails, setMovieDetails] = useState();
+  const [showMore, setShowMore] = useState(false);
+
+  const getMovieDetails = async (imdbId) => {
+    if (imdbId && typeof imdbId === "string") {
+      const detailsUrl = `https://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=${process.env.REACT_APP_OMDB_API_KEY}`;
+
+      return fetch(detailsUrl)
+        .then((response) => response.json())
+        .then((movieDetails) => {
+          setMovieDetails(movieDetails);
+        })
+        .catch(() => {
+          console.error(
+            `Error fetching movie details for movie with IMDB id: ${imdbId}`
+          );
+          return null;
+        });
+    }
+  };
+  useEffect(() => {
+    getMovieDetails(movie.imdb_id);
+  }, [movie]);
+}
+```
+<p align="center">
+    <sup>Code insert from the MovieFacts component that is shown on the MovieDetailsPage.</sup>
+</p>
+
+I'm using the OMDB API here, because it provides more information about the actors, writers, directors and similar facts about the movie.\
+In similar fashion to the previous call, there's a fucntion *getMovieDetails(imdbID)* which takes in the imdb id of the desired movie, and makes a call to the omdb API with the imdb id and in return we get a response object, as:
+
+```js
+{"Title":"Dune",
+"Year":"2021",
+"Rated":"PG-13",
+"Released":"22 Oct 2021",
+"Runtime":"155 min",
+"Genre":"Action, Adventure, Drama",
+"Director":"Denis Villeneuve",
+"Writer":"Jon Spaihts, Denis Villeneuve, Eric Roth",
+"Actors":"Timothée Chalamet, Rebecca Ferguson, Zendaya",
+"Plot":"A noble family becomes embroiled in a war for control over the galaxy's most valuable asset while its heir becomes troubled by visions of a dark future.","Language":"English, Mandarin","Country":"United States, Canada","Awards":"Won 6 Oscars. 173 wins & 294 nominations total",
+"Poster":"https://m.media-amazon.com/images/M/MV5BMDQ0NjgyN2YtNWViNS00YjA3LTkxNDktYzFkZTExZGMxZDkxXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_SX300.jpg",
+"Ratings":[{"Source":"Internet Movie Database","Value":"8.0/10"},{"Source":"Rotten Tomatoes","Value":"83%"},{"Source":"Metacritic","Value":"74/100"}],
+"Metascore":"74",
+"imdbRating":"8.0",
+"imdbVotes":"772,111",
+"imdbID":"tt1160419",
+"Type":"movie","DVD":"22 Oct 2021",
+"BoxOffice":"$108,897,830",
+"Production":"N/A","Website":"N/A",
+"Response":"True"}
+```
+After that i'm just displaying the information normally with html and css.
+
+#### 3.1.3 Using the Youtube API
+```jsx
+function YoutubeTrailer({title}) {
+
+    const getTrailer = async () => {
+      const cachedData = getFromCache();
+
+      // Use cached data if available
+      if (cachedData && cachedData.title === title) {
+        const iframe = document.getElementById('trailer');
+        iframe.src = `https://www.youtube.com/embed/${cachedData.videoId}`;
+      } else {
+        if (title && typeof title === 'string') {
+          const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(`${title} trailer`)}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`;
+    
+          try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+  
+            const firstVideoId = data.items[0]?.id?.videoId;
+
+            const iframe = document.getElementById('trailer');
+            iframe.src = `https://www.youtube.com/embed/${firstVideoId}`;
+
+            // Save data to cache
+            saveToCache({ title, videoId: firstVideoId });
+          } catch (error) {
+            console.error('Error fetching trailer:', error);
+          }
+        }
+      }
+    };
+
+    useEffect(()=>{
+      getTrailer();
+    },[title])
+
+    
+  return (
+    <YoutubeTrailerContainer>
+      <h1 className='title'><FaRegCirclePlay />  Watch trailer</h1> 
+      <div id='youtube-trailer' ref={youtubeTrailerRef}>
+        <iframe title='trailer' id='trailer' frameBorder="0" allowFullScreen></iframe>
+      </div>
+    </YoutubeTrailerContainer>
+  )
+}
+```
+Here i'm using the youtube API, because i need to fetch the trailer of the movie, which neither the TMDB or OMDB API provides.\
+So therefore in the *useEffect()* i'm calling the function *getTrailer()* when the parameter *title* changes.\
+I'm making a call to the https://www.googleapis.com/youtube/v3/search url with the movie title, which returns an array of youtube videos, from which i'm getting the first one, because that is the desired trailer.
+
+#### 3.2 Components
+The components are divided in few groups:
+- Section components,
+- Showcase components,
+- Independent components and
+- Single components.
+
+Let's start from the bottom, the single components. There's compomenents for Movie and TvShow which are used in the display of LatestMovies and LatestTvShows. There's components for SmallMovie and SmallTvShow which are used in the display of Top 9 this week, for movies and TV shows in the PopularMovies and PopularTvShows components. Also there's a Comment component which is used in the Comments component.
+
+After that in the Showcase components group, there is Comments component in which the comments firstly are fetched and after that displayed. LatestTvShows and LatestMovies where the movies firsly are fetched from the API then displayed through the Movie, SmallMovie, TvShow and SmallTvShow components. WatchlistItems is very similar to the other ones, first it maps the items in the watchlist into the according movie or TV show component.
+
+In the section components, we have MovieSection, TvShowSection and WatchlistSection. In these sections we're just combining the other components. For example in the MovieSection we use the LatestMovies component and Popular Movies.
+
+In the independent components, we have few components that are not using any other components. We have MovieDetailsHome and TvShowDetailsHome that are the page when you open the movie details page, MovieFacts and TvShowFacts that are displaying some additional information about the movies/TV shows, youtube trailer that is used to get and display the movie trailer.
+
+#### 3.3 Styling the components
+For styling i'm using the *styled-component* library. 
+This approach helps in creating modular and scoped styles for React components, making it easier to manage and maintain styles for individual components. The styles are applied dynamically at runtime, and the generated class names are often unique to avoid global style conflicts.
+
+```jsx
+const YoutubeTrailerContainer = styled.div`
+  padding: 2% min(12%, 25em);
+
+  .title{
+    grid-column: 1/-1;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+  .title > *{
+    margin-right: 0.25em;
+  }
+
+  .youtube-trailer{
+    width: 100%;
+    height: 100%;
+  }
+  
+  #trailer {
+    background-color: var(--offWhite);
+    width: 100%;
+    height: 80vh;
+  }
+  
+  @media (max-width: 47em) {
+    #trailer{
+      height: 30vh;
+    }
+  }
+`
+```
+<p align="center">
+    <sup>Code insert with styled-component from the Youtube Trailer component.</sup>
+</p>
+With styled-components we can use something very similiar to SCSS where we can nest CSS rules, so the code would look cleaner, more maintainable and avoid unwanted overwrites. 
+
+#### 3.4 Libraries
+
+In this project i'm using few libraries like:
+- React and React Router,
+- React DOM,
+- Styled Components,
+- Firebase,
+- Framer motion,
+- React icons and
+- React Splide.
+
+#### 3.4.1 React Router
+```jsx
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {useState} from 'react';
+
+
+function App() {
+  const [movieverseUser, setMovieverseUser] = useState(null);
+  
+  return (
+    <div className="App">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home movieverseUser={movieverseUser}/>} />
+          <Route path="/login" element={<Login movieverseUser={movieverseUser} setMovieverseUser={setMovieverseUser}/>} />
+          <Route path="/logout" element={<Logout movieverseUser={movieverseUser} setMovieverseUser={setMovieverseUser}/>} />
+          <Route path="/movies" element={<Movies movieverseUser={movieverseUser}/>} />
+          <Route path="/tv-shows" element={<TvShows movieverseUser={movieverseUser}/>} />
+          <Route path="/movie/:id/details" element={<MovieDetailsPage movieverseUser={movieverseUser}/>} />
+          <Route path="/tv-show/:id/details" element={<TvShowDetailsPage movieverseUser={movieverseUser}/>} />
+          <Route path="/watchlist" element={<Watchlist movieverseUser={movieverseUser}/>} />
+        </Routes>
+      </Router>
+    </div>
+  );
+}
+```
+The react router is user here to map the components to the according url which they should respond. For example the *Login* component is being rendered when the user goes to /login url, same for all the others.
+
+#### 3.4.2 React Router Dom
+```jsx
+import { useNavigate } from 'react-router-dom';
+
+const navigate = useNavigate();
+
+useEffect(() => {
+    const prevUrl = sessionStorage.getItem('prevUrl');
+
+    if (prevUrl && movieverseUser != null) {
+      navigate(prevUrl);
+    }
+    else if(movieverseUser != null){
+        navigate("/");
+    }
+}, [movieverseUser, navigate])
+```
+This is a code snippet from Login component where i'm using the *useNavigate()* hook to navigate the user back to the url he came from, or if he directly came to the /login page i'm just navigating to the home page.
+
+#### 3.4.3 Styled components
+The styled components are used because this approach helps in creating modular and scoped styles for React components, making it easier to manage and maintain styles for individual components as said previously.
+
+#### 3.4.4 React Splide
+React splide is a lightweight, flexible and accessible slider/carousel written in TypeScript. No dependencies, no Lighthouse errors.
+```jsx
+import { Splide, SplideSlide } from '@splidejs/react-splide';
+import '@splidejs/splide/css';
+
+<Splide
+      options={{
+        type: 'loop', 
+        // arrows: false,
+      }}
+    >
+      {featuredMovies?.map((movie, i) => (
+          <SplideSlide key={movie.id}>
+            <FeaturedMovieContainer className="container" style={{
+              backgroundImage: `url(https://image.tmdb.org/t/p/original/${featuredMoviesBackgrounds[i]})`,
+            }}>
+              <div className='featuredMovie'>
+                <div className="left_side">
+                  <h1 className='title'>{movie.title}</h1>
+                  <p className='paragraph'>{movie.overview}</p>
+                  <Link to={'/movie/' + movie.id + '/details'}>
+                    <button className='details_button'>See details</button>
+                  </Link>
+                  <Link to={'/movie/' + movie.id + '/details'} onClick={scrollToTrailer}>
+                    <button className='trailer_button'>Watch trailer</button>
+                  </Link>
+                </div>
+                <img className='poster' src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+              </div>
+              <div className="black_gradient"></div>
+            </FeaturedMovieContainer>
+          </SplideSlide>
+        ))}
+      </Splide>
+```
+Here i have shown how we import the splide library, and we also need to import a style for the carousell, here i'm using the default styling.\
+First we create the container Splide, where we can set few properties, i've set the property loop to true, which loops the slides. Then with SplideSlide we create each of the elements, which in this case is one movie with all it's details.
+
+#### 3.4.5 Framer motion
+Framer motion is a library providing neat animations, cool effects and transitions. I'm using it in the nav bar, specifically when the hamburger menu is clicked so it has a smooth transition.
+
+```jsx
+import { AnimatePresence, motion } from "framer-motion";
+
+return (
+    <nav>
+      <Link to={"/"} className="homeButton">
+        MovieVerse
+      </Link>
+      <motion.button
+        className="toggleButton"
+        onClick={handleClick}
+        animate={{ rotate: rotation }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 0 50 50">
+          <path d="M6 36v-3h36v3Zm0-10.5v-3h36v3ZM6 15v-3h36v3Z" />
+        </svg>
+      </motion.button>
+      <AnimatePresence>
+        {menuState && (
+          <motion.ul
+            className="navlinks"
+            initial={{ y: -25, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "tween" }}
+            exit={{ y: -25, opacity: 0 }}
+          >
+            <NavLink to="/" onClick={closeMenu}>
+              <li className="navlink">Home</li>
+            </NavLink>
+            <NavLink to="/movies" onClick={closeMenu}>
+              <li className="navlink">Movies</li>
+            </NavLink>
+            <NavLink to="/tv-shows" onClick={closeMenu}>
+              <li className="navlink">TV shows</li>
+            </NavLink>
+            <NavLink to="/watchlist" onClick={closeMenu}>
+              <li className="navlink">Watchlist</li>
+            </NavLink>
+            <NavLink to={movieverseUser ? '/logout': '/login'} onClick={closeMenu}>
+              <li className="navlink">{movieverseUser ? 'Logout' : <>Login <FaArrowRightLong/></>}</li>
+            </NavLink>
+          </motion.ul>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+```
+We create motion elements, and we can change the properties on them. For example here on the ul i have added a smooth transition, and a offset of -25px so it looks like it comes from the top.
+
+#### 3.4.6 React icons
+I'm using react icons all around the project. We can search for the icons here https://react-icons.github.io/react-icons/, and then just import them in the document and use them as components.
+
+```jsx
+import { FaRegCirclePlay } from "react-icons/fa6";
+
+return (
+    <YoutubeTrailerContainer>
+      <h1 className='title'><FaRegCirclePlay />  Watch trailer</h1> 
+      <div id='youtube-trailer' ref={youtubeTrailerRef}>
+        {/* remove iframe later */}
+        <iframe title='trailer' id='trailer' frameBorder="0" allowFullScreen></iframe>
+      </div>
+    </YoutubeTrailerContainer>
+  )
+```
+#### 3.4.7 Firebase
+I'm using firebase for user authentication, logging in and signing up. Also i'm saving the users, comments about the movies/tv shows and user watchlists in *Firestore database*. Here's an example of that:
+```jsx
+import { doc, getDoc } from "firebase/firestore";
+import { db } from '../../firebase/config';
+
+useEffect(() => {
+      const fetchWatchlist = async () => {
+        if(movieverseUser && movieverseUser.id){
+          const userId = movieverseUser.id;
+          const watchlistRef = doc(db, "watchlists", userId);
+  
+        try {
+          const watchlistDoc = await getDoc(watchlistRef);
+          const currentWatchlist = watchlistDoc.data().watchlist_items || [];
+  
+          convertItems(currentWatchlist);
+        } catch (error) {
+          console.error("Error fetching watchlist:", error);
+        }
+        }
+      };
+
+      fetchWatchlist();
+      // eslint-disable-next-line
+    }, [movieverseUser]);
+```
+Here i'm fetching the users watchlist from the db and then parsing it into a movie component or tv show component accordingly.\
+One more thing im using firebase for is *hosting*. The application is deployed and runing on firebase.
+
+### 4. Additional images and links
   <img src="https://github.com/dariomartinovski/ShooterHero/assets/80409852/64c1693a-6738-46b8-a5f1-328c93e29e4c" alt="Почетен екран" style="width: 440px;">
-  <img src="https://github.com/dariomartinovski/ShooterHero/assets/80409852/0b4276bc-6503-4c21-b54d-1df537e1c71a" alt="Почетен екран" style="width: 440px;">
-   <img src="https://github.com/dariomartinovski/ShooterHero/assets/80409852/6fc0a889-265c-4a0e-91c7-fa813b8c93c5" alt="Почетен екран" style="width: 440px;">
-   <img src="https://github.com/dariomartinovski/ShooterHero/assets/80409852/f80dfd53-922a-4492-bdae-7bf95690e6f9" alt="Почетен екран" style="width: 440px;">
-  <img src="https://github.com/dariomartinovski/ShooterHero/assets/80409852/903d4d0b-18f8-4d99-a44c-a78832943ad5" alt="Почетен екран" style="width: 440px;">
-  <img src="https://github.com/dariomartinovski/ShooterHero/assets/80409852/5c2fa152-732d-40a9-af94-48ae6b01d0c4" alt="Почетен екран" style="width: 440px;"> 
+  
   
 ---
 
-**Целиот изворен код, како и exe датотеката се наоѓаат во branch-от master.
+
+The entire code source code is in the main branch of the repository **https://github.com/dariomartinovski/movieverse**\
+The application is also hosted on firebase: **https://movieverse-5c81e.web.app/**

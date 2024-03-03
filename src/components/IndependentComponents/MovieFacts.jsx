@@ -4,7 +4,6 @@ import styled from "styled-components";
 function MovieFacts({ movie }) {
   const [movieDetails, setMovieDetails] = useState();
   const [showMore, setShowMore] = useState(false);
-  // const omdb_api_key = "9a3a3841";
 
   const getMovieDetails = async (imdbId) => {
     if (imdbId && typeof imdbId === "string") {

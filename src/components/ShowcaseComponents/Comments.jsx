@@ -83,11 +83,6 @@ function Comments({item, movieverseUser}) {
       const updatedComments = [...comments, newComment];
   
       // TODO update the comments for the movie in the firebase db. 
-      // If a document does not exist for the current item(tv show) make a 
-      // new one first then, add the name of it as item_name and add a collection 
-      // called comments in which we will add the comments. Where each comments id 
-      // is the id of the movieverse user thats adding the comment, and the other fields 
-      // are the same as before, owner_id, owner_name, date, text, like_count, diskike_count
       try {
         if (item && item.id) {
           const commentsCollection = collection(db, `comments_for/${item.id}/comments`);
